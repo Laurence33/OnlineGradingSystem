@@ -1,4 +1,52 @@
 <?php
+session_start();
+include "includes/config.php";
+
+if (isset($_SESSION['alogin']) or isset($_SESSION['plogin'])) {
+    header("Location: dashboard.php");
+}
+// Admin log in submitted
+if (isset($_POST['alogin'])) {
+
+    $username = $_POST['username'];
+    $password = md5($_POST['password']);
+
+    $sql = "SELECT UserName,Password FROM tbladmin WHERE UserName=:uname and Password=:password";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':uname', $username, PDO::PARAM_STR);
+    $query->bindParam(':password', $password, PDO::PARAM_STR);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+    if ($query->rowCount() > 0) {
+        $_SESSION['alogin'] = $_POST['username'];
+        echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+    } else {
+
+        echo "<script>alert('Invalid Details');</script>";
+    }
+}
+
+// Professor Login submitted
+if (isset($_POST['plogin'])) {
+
+    $username = $_POST['username'];
+    $password = md5($_POST['password']);
+
+    $sql = "SELECT ProfessorId,UserName,Password FROM tbllogin WHERE UserName=:uname and Password=:password";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':uname', $username, PDO::PARAM_STR);
+    $query->bindParam(':password', $password, PDO::PARAM_STR);
+    $query->execute();
+    $result = $query->fetch(PDO::FETCH_OBJ);
+    if ($result) {
+        $_SESSION['plogin'] = $result->UserName;
+        $_SESSION['profId'] = $result->ProfessorId;
+        echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+    } else {
+        echo "<script>alert('Invalid Details');</script>";
+    }
+}
+
 include "header.php";
 ?>
 <div class="container-fluid">
@@ -52,7 +100,7 @@ include "header.php";
                                 <div class="card" style="width: 28rem; margin: 10px;">
                                     <div class="card-body">
                                         <h5 class="card-title">Admin Login</h5>
-                                        <form method="POST" action="includes/login.inc.php">
+                                        <form method="POST">
                                             <div class="form-group">
                                                 <label for="username">Username</label>
                                                 <input type="text" class="form-control" id="username" name="username" aria-describedby="unameHelp">
@@ -65,7 +113,7 @@ include "header.php";
                                                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                                         <label class="form-check-label" for="exampleCheck1">Check me out</label>
                                                     </div> -->
-                                            <button type="submit" class="btn btn-primary" name="adminlogin">Submit</button>
+                                            <button type="submit" class="btn btn-primary" name="alogin">Submit</button>
                                         </form>
                                     </div>
                                 </div>
@@ -91,7 +139,7 @@ include "header.php";
                                                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                                         <label class="form-check-label" for="exampleCheck1">Check me out</label>
                                                     </div> -->
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" name="plogin" class="btn btn-primary">Submit</button>
                                         </form>
                                     </div>
                                 </div>

@@ -1,4 +1,14 @@
-<?php include "header.php";
+<?php
+session_start();
+error_reporting(0);
+if (strlen($_SESSION['alogin']) == '' and strlen($_SESSION['plogin']) == '') {
+    header("Location: index.php");
+}
+// The admin/professor is logged in and has access to the page
+
+
+
+include "header.php";
 ?>
 
 <div class="wrapper">
