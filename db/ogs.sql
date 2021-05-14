@@ -147,10 +147,9 @@ CREATE TABLE `tblstudents` (
 
 CREATE TABLE `tblgrades` (
   `id` int(11) NOT NULL,
-  `StudentId` int(11) DEFAULT NULL,
-  `ClassId` int(11) DEFAULT NULL,
-  `SubjectId` int(11) DEFAULT NULL,
-  `Marks` int(11) DEFAULT NULL
+  `StudentId` varchar(100) DEFAULT NULL,
+  `AdvisingId` int(11) DEFAULT NULL,
+  `Marks` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
