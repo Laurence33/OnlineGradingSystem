@@ -1,5 +1,4 @@
 <?php
-include "config.php";
 
 $profId = $_SESSION['profId'];
 ?>
@@ -58,7 +57,7 @@ $profId = $_SESSION['profId'];
 
                 ?>
                         <li>
-                            <a href="manageLoad.php?advisingid=<?php echo htmlentities($result->AdvisingId); ?>"> <?php echo htmlentities($className) . " " . htmlentities($subName) ?></a>
+                            <a href="manageLoad.php?advisingid=<?php echo htmlentities($result->AdvisingId); ?>"> <?php echo htmlentities($className) . "-" . htmlentities($subName) ?></a>
                         </li>
                 <?php }
                 } ?>
