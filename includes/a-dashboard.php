@@ -2,10 +2,13 @@
     <div class="card" style="width: 14rem;margin:10px;">
         <!-- <img class="card-img-top" src=".../100px180/" alt="Card image cap"> -->
         <?php
-        $sql1 = "SELECT id from tblstudents ";
+        $sql1 = "SELECT id from tblstudents";
         $query1 = $dbh->prepare($sql1);
         $query1->execute();
         $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
+        if (!$results1) {
+            echo "Error on SQL";
+        }
         $totalstudents = $query1->rowCount();
         ?>
         <div class="card-body text-center">

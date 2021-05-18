@@ -65,26 +65,22 @@ include "header.php";
                             <h3 class="card-title">Looking for Student Results?</h3>
                             <br>
                             <div class="alert alert-primary" role="alert">
-                                If you want to view your results, input your Roll ID and Birthdate below!
+                                If you want to view your results, input your Student ID and Birthdate below!
                             </div>
                             <br>
-                            <form method="POST">
+                            <form method="POST" action="viewResult.php">
                                 <div class="form-group">
-                                    <label for="rollid">Roll ID</label>
-                                    <input type="text" class="form-control" id="rollid" name="rollid" aria-describedby="rollidHelp">
-                                    <small id="rollidHelp" class="form-text text-muted">Example: 18-0684</small>
+                                    <label for="studId">Student ID</label>
+                                    <input type="text" class="form-control" id="studid" name="studentId" aria-describedby="studIdHelp">
+                                    <small id="studIdHelp" class="form-text text-muted">Example: 18-0684</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="birthdate">Birthdate</label>
                                     <input type="date" class="form-control" id="birthdate" name="birthdate">
                                 </div>
-                                <!-- <div class="form-group form-check">
-                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                                        </div> -->
                                 <br>
                                 <div class="container text-center">
-                                    <button type="submit" class="btn btn-success btn-lg">View my Results</button>
+                                    <button type="submit" name="viewResults" class="btn btn-success btn-lg">View my Results</button>
                                 </div>
                             </form>
                             <br>
