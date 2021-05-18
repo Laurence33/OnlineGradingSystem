@@ -122,6 +122,7 @@ include "header.php";
                     $cnt = 1;
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
+                            if (!$result->Status) continue;
                     ?>
                             <option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassName); ?></option>
                     <?php $cnt += 1;

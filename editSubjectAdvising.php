@@ -108,6 +108,7 @@ include "header.php";
                         $cnt2 = 1;
                         if ($query2->rowCount() > 0) {
                             foreach ($results2 as $result2) {
+                                if (!$result2->Status) continue;
                         ?>
                                 <option value="<?php echo htmlentities($result2->id); ?>" <?php if ($result1->ClassId == $result2->id) echo "selected"; ?>><?php echo htmlentities($result2->ClassName); ?></option>
                         <?php $cnt2 += 1;
@@ -127,6 +128,7 @@ include "header.php";
                         $cnt3 = 1;
                         if ($query3->rowCount() > 0) {
                             foreach ($results3 as $result3) {
+                                if (!$result3->Status) continue;
                         ?>
                                 <option value="<?php echo htmlentities($result3->id); ?>" <?php if ($result1->SubjectId == $result3->id) echo "selected"; ?>><?php echo htmlentities($result3->SubjectName); ?></option>
                         <?php $cnt3 += 1;

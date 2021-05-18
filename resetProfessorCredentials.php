@@ -9,38 +9,27 @@ if (strlen($_SESSION['alogin']) == '') {
 // Admin is logged in and can access the page
 
 
-if (isset($_POST['createPassword'])) {
+if (isset($_POST['resetPassword'])) {
     $profId = $_POST['profId'];
     $username = $_POST['username'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
+
     if ($password != $cpassword) {
         $error = "Password does not match, please try again.";
-    } else if ($username == "") {
-        $error = "Please enter a username.";
     } else {
-        // Check if username is in use
-        $sql1 = "SELECT * from tbllogin WHERE UserName=:username";
-        $query1 = $dbh->prepare($sql1);
-        $query1->bindParam(':username', $username, PDO::PARAM_STR);
-        $query1->execute();
-        $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
-        if ($query1->rowCount() > 1) {
-            $error = "Username is already in use.";
+
+        $sql2 = "UPDATE tbllogin SET UserName=:username Password=:password WHERE ProfessorId=:profid;";
+        $query2 = $dbh->prepare($sql2);
+        $query2->bindParam(':profid', $profId, PDO::PARAM_STR);
+        $query2->bindParam(':username', $username, PDO::PARAM_STR);
+        $query2->bindParam(':password', md5($password), PDO::PARAM_STR);
+        $success = $query2->execute();
+
+        if ($success) {
+            $msg = "Credential updated successfully";
         } else {
-            // Username is unused and password matches, add the credential to database
-            $sql2 = "INSERT INTO tbllogin(ProfessorId, UserName, Password) VALUES(:profid, :username, :password);";
-            $query2 = $dbh->prepare($sql2);
-            $query2->bindParam(':profid', $profId, PDO::PARAM_STR);
-            $query2->bindParam(':username', $username, PDO::PARAM_STR);
-            $query2->bindParam(':password', md5($password), PDO::PARAM_STR);
-            $query2->execute();
-            $lastInsertId = $dbh->lastInsertId();
-            if ($lastInsertId) {
-                $msg = "Credential Created successfully";
-            } else {
-                $error = "Something went wrong. Please try again";
-            }
+            $error = "Something went wrong. Please try again";
         }
     }
 }
@@ -99,12 +88,15 @@ include "header.php";
                 <label for="profId">Professor</label>
                 <select class="form-control" id="profId" name="profId">
                     <?php
-                    $sql = "SELECT id,ProfessorName from tblprofessors";
+                    // get professor details
+                    $sql = "SELECT id,ProfessorName,Status from tblprofessors";
                     $query = $dbh->prepare($sql);
                     $query->execute();
                     $results = $query->fetchAll(PDO::FETCH_OBJ);
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
+                            if (!$result->Status) continue; // do not show professor if inactive
+                            // if the professor already has a credential, do not show on the options
                             $loginSql = "SELECT * FROM tbllogin WHERE ProfessorId=:profid";
                             $loginQuery = $dbh->prepare($loginSql);
                             $loginQuery->bindParam('profid', $result->id);

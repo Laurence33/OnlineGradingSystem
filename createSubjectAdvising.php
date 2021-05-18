@@ -93,6 +93,7 @@ include "header.php";
                     $cnt = 1;
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
+                            if (!$result->Status) continue;
                     ?>
                             <option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassName); ?></option>
                     <?php $cnt += 1;
@@ -112,6 +113,7 @@ include "header.php";
                     $cnt1 = 1;
                     if ($query->rowCount() > 0) {
                         foreach ($results1 as $result1) {
+                            if (!$result1->Status) continue;
                     ?>
                             <option value="<?php echo htmlentities($result1->id); ?>"><?php echo htmlentities($result1->SubjectCode) . ' ' . htmlentities($result1->SubjectName); ?></option>
                     <?php $cnt1 += 1;

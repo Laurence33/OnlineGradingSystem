@@ -85,6 +85,7 @@ include "header.php";
                     $cnt = 1;
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
+                            if (!$result->Status) continue;
                             $subjectSql = "SELECT * FROM tblsubjects WHERE id=:subjectid";
                             $subjectQuery = $dbh->prepare($subjectSql);
                             $subjectQuery->bindParam(':subjectid', $result->SubjectId);
@@ -109,6 +110,7 @@ include "header.php";
                     $cnt1 = 1;
                     if ($query->rowCount() > 0) {
                         foreach ($results1 as $result1) {
+                            if (!$result1->Status) continue;
                     ?>
                             <option value="<?php echo htmlentities($result1->id); ?>"><?php echo htmlentities($result1->ProfessorName); ?></option>
                     <?php $cnt1 += 1;

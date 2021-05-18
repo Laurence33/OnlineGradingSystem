@@ -134,6 +134,7 @@ include "header.php";
                         $results2 = $query2->fetchAll(PDO::FETCH_OBJ);
                         if ($query2->rowCount() > 0) {
                             foreach ($results2 as $result2) {
+                                if (!$result2->Status) continue;
                         ?>
                                 <option value="<?php echo htmlentities($result2->id); ?>" <?php if ($result1->ClassId == $result2->id) echo "selected"; ?>><?php echo htmlentities($result2->ClassName); ?></option>
                         <?php

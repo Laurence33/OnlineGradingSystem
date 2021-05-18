@@ -38,10 +38,19 @@ if (isset($_POST['plogin'])) {
     $query->bindParam(':password', $password, PDO::PARAM_STR);
     $query->execute();
     $result = $query->fetch(PDO::FETCH_OBJ);
-    if ($result) {
-        $_SESSION['plogin'] = $result->UserName;
-        $_SESSION['profId'] = $result->ProfessorId;
-        echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+    if ($result) { // credentials found
+        // check if the professor is active, do not allow login of inactive professor
+        $profSql = "SELECT * FROM tblprofessors WHERE id=?";
+        $profQuery = $dbh->prepare($profSql);
+        $profQuery->execute($result->ProfessorId);
+        $professor = $profQuery->fetch(PDO::FETCH_OBJ);
+        if ($professor->Status) {
+            $_SESSION['plogin'] = $result->UserName;
+            $_SESSION['profId'] = $result->ProfessorId;
+            echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+        } else {
+            echo "<script>alert('Your account is disabled, please contact the administrator.');</script>";
+        }
     } else {
         echo "<script>alert('Invalid Details');</script>";
     }
