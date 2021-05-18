@@ -70,7 +70,6 @@ include "header.php";
                         $result1 = $query1->fetch(PDO::FETCH_OBJ);
                         $subName = $result1->SubjectName;
 
-
                         $sql2 = "SELECT * FROM  tblclasses WHERE id=:classid";
                         $query2 = $dbh->prepare($sql2);
                         $query2->bindParam(':classid', $result->ClassId, PDO::PARAM_STR);

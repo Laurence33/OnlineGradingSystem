@@ -85,8 +85,13 @@ include "header.php";
                     $cnt = 1;
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
+                            $subjectSql = "SELECT * FROM tblsubjects WHERE id=:subjectid";
+                            $subjectQuery = $dbh->prepare($subjectSql);
+                            $subjectQuery->bindParam(':subjectid', $result->SubjectId);
+                            $subjectQuery->execute();
+                            $subject = $subjectQuery->fetch(PDO::FETCH_OBJ);
                     ?>
-                            <option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassCode); ?></option>
+                            <option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassCode) . ' ' . htmlentities($subject->SubjectName); ?></option>
                     <?php $cnt += 1;
                         }
                     } ?>

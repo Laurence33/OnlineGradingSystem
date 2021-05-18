@@ -113,7 +113,7 @@ include "header.php";
                     if ($query->rowCount() > 0) {
                         foreach ($results1 as $result1) {
                     ?>
-                            <option value="<?php echo htmlentities($result1->id); ?>"><?php echo htmlentities($result1->SubjectName); ?></option>
+                            <option value="<?php echo htmlentities($result1->id); ?>"><?php echo htmlentities($result1->SubjectCode) . ' ' . htmlentities($result1->SubjectName); ?></option>
                     <?php $cnt1 += 1;
                         }
                     } ?>
