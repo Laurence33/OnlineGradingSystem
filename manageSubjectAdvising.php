@@ -76,8 +76,6 @@ include "header.php";
                         $query2->execute();
                         $result2 = $query2->fetch(PDO::FETCH_OBJ);
                         $className = $result2->ClassName;
-
-
                 ?>
                         <tr>
                             <th scope="row"><?php echo $cnt; ?></th>
