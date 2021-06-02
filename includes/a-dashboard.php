@@ -5,10 +5,7 @@
         $sql1 = "SELECT id from tblstudents";
         $query1 = $dbh->prepare($sql1);
         $query1->execute();
-        $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
-        if (!$results1) {
-            echo "Error on SQL";
-        }
+    
         $totalstudents = $query1->rowCount();
         ?>
         <div class="card-body text-center">
