@@ -40,11 +40,12 @@ if (isset($_POST['plogin'])) {
     $result = $query->fetch(PDO::FETCH_OBJ);
     if ($result) { // credentials found
         // check if the professor is active, do not allow login of inactive professor
-        $profSql = "SELECT * FROM tblprofessors WHERE id=?";
+        $profSql = "SELECT * FROM tblprofessors WHERE id=:profid";
         $profQuery = $dbh->prepare($profSql);
-        $profQuery->execute($result->ProfessorId);
+        $profQuery->bindParam(':profid', $result->ProfessorId, PDO::PARAM_STR);
+        $profQuery->execute();
         $professor = $profQuery->fetch(PDO::FETCH_OBJ);
-        if ($professor->Status) {
+        if ($professor->Status == 1) {
             $_SESSION['plogin'] = $result->UserName;
             $_SESSION['profId'] = $result->ProfessorId;
             echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";

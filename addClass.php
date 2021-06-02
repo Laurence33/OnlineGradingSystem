@@ -50,7 +50,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Add Class Page</h2>
+        <h2>Add Class</h2>
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
