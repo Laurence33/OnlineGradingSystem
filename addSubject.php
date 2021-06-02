@@ -8,11 +8,13 @@ if (strlen($_SESSION['alogin']) == '') {
     if (isset($_POST['addSubject'])) {
         $subCode = $_POST['subCode'];
         $subName = $_POST['subName'];
+        $status = 1;
 
-        $sql = "INSERT INTO  tblsubjects(SubjectName,SubjectCode) VALUES(:subjectname,:subjectcode)";
+        $sql = "INSERT INTO  tblsubjects(SubjectName,SubjectCode, Status) VALUES(:subjectname,:subjectcode, :status)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':subjectname', $subName, PDO::PARAM_STR);
         $query->bindParam(':subjectcode', $subCode, PDO::PARAM_STR);
+        $query->bindParam(':status', $status, PDO::PARAM_STR);
         $query->execute();
         $lastInsertId = $dbh->lastInsertId();
         if ($lastInsertId) {

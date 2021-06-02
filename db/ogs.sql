@@ -72,7 +72,8 @@ CREATE TABLE `tblclasses` (
 CREATE TABLE `tblsubjects` (
   `id` int(11) NOT NULL,
   `SubjectName` varchar(100) NOT NULL,
-  `SubjectCode` varchar(100) NOT NULL
+  `SubjectCode` varchar(100) NOT NULL,
+  `Status` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
