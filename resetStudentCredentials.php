@@ -9,15 +9,14 @@ if (strlen($_SESSION['alogin']) == '') {
 // Admin is logged in and can access the page
 
 
-if (isset($_POST['createPassword'])) {
-    $profId = $_POST['profId'];
+if (isset($_POST['resetPassword'])) {
+    $loginId = $_POST['loginId'];
     $username = $_POST['username'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
+
     if ($password != $cpassword) {
         $error = "Password does not match, please try again.";
-    } else if ($username == "") {
-        $error = "Please enter a username.";
     } else {
         // Check if username is in use
         $sql1 = "SELECT * from tbllogin WHERE UserName=:username";
@@ -25,20 +24,19 @@ if (isset($_POST['createPassword'])) {
         $query1->bindParam(':username', $username, PDO::PARAM_STR);
         $query1->execute();
         $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
-        if ($query1->rowCount() > 1) {
+        if ($query1->rowCount() > 0) {
             $error = "Username is already in use.";
         } else {
             $hash = md5($password);
-            // Username is unused and password matches, add the credential to database
-            $sql2 = "INSERT INTO tbllogin(UserId, Role, UserName, Password) VALUES(:profid, 2,   :username, :password);";
+            $sql2 = "UPDATE tbllogin SET UserName=:username, Password=:password WHERE id=:loginid";
             $query2 = $dbh->prepare($sql2);
-            $query2->bindParam(':profid', $profId, PDO::PARAM_STR);
+            $query2->bindParam(':loginid', $loginId, PDO::PARAM_STR);
             $query2->bindParam(':username', $username, PDO::PARAM_STR);
             $query2->bindParam(':password', $hash, PDO::PARAM_STR);
-            $query2->execute();
-            $lastInsertId = $dbh->lastInsertId();
-            if ($lastInsertId) {
-                $msg = "Credential Created successfully";
+            $success = $query2->execute();
+
+            if ($success) {
+                $msg = "Credential updated successfully";
             } else {
                 $error = "Something went wrong. Please try again";
             }
@@ -67,7 +65,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Create Professor Credential</h2>
+        <h2>Reset Student Credential</h2>
 
         <!-- BREADCRUMB -->
         <nav aria-label="breadcrumb">
@@ -76,8 +74,8 @@ include "header.php";
                     <i class="fas fa-home"></i>
                     <a class="text-primary" href="dashboard.php">Home</a>
                 </li>
-                <li class="breadcrumb-item">Professors</li>
-                <li class="breadcrumb-item active" aria-current="page">Create Professor Credential</li>
+                <li class="breadcrumb-item">Students</li>
+                <li class="breadcrumb-item active" aria-current="page">Reset Student Credential</li>
             </ol>
         </nav>
         <!-- END OF BREADCRUMB -->
@@ -97,29 +95,27 @@ include "header.php";
         <form method="POST">
 
             <div class="form-group">
-                <label for="profId">Professor</label>
-                <select class="form-control" id="profId" name="profId">
+                <label for="loginId">Student</label>
+                <select class="form-control" id="loginId" name="loginId">
                     <?php
-                    $sql = "SELECT id,ProfessorName from tblprofessors";
+                    // get professor details
+                    $sql = "SELECT id,StudentName,Status from tblstudents";
                     $query = $dbh->prepare($sql);
                     $query->execute();
                     $results = $query->fetchAll(PDO::FETCH_OBJ);
-                    $count = 0;
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
-                            $loginSql = "SELECT * FROM tbllogin WHERE UserId=:profid AND Role=2";
+                            if (!$result->Status) continue; // do not show professor if inactive
+                            // if the professor already has a credential, do not show on the options
+                            $loginSql = "SELECT * FROM tbllogin WHERE UserId=:studid AND Role=3";
                             $loginQuery = $dbh->prepare($loginSql);
-                            $loginQuery->bindParam(':profid', $result->id);
+                            $loginQuery->bindParam(':studid', $result->id);
                             $loginQuery->execute();
-                            if ($loginQuery->rowCount() > 0) continue;
+                            $studLogin = $loginQuery->fetch(PDO::FETCH_OBJ);
+                            if ($loginQuery->rowCount() == 0) continue;
                     ?>
-                            <option value="<?php echo htmlentities($result->id) ?>"><?php echo htmlentities($result->ProfessorName) ?></option>
-                    <?php
-                            $count += 1;
-                        }
-                        if ($count == 0) {
-                            echo '<option> No Professor to create credentials.</option>';
-                        }
+                            <option value="<?php echo htmlentities($studLogin->id) ?>"><?php echo htmlentities($result->StudentName) ?></option>
+                    <?php }
                     } ?>
                 </select>
             </div>
@@ -138,7 +134,7 @@ include "header.php";
                 <input type="password" name="cpassword" class="form-control" id="cpassword">
             </div>
 
-            <button type="submit" name="createPassword" <?php if ($count == 0) echo 'disabled'; ?> class="btn btn-primary">Submit</button>
+            <button type="submit" name="resetPassword" class="btn btn-primary">Submit</button>
 
         </form>
 
@@ -148,8 +144,8 @@ include "header.php";
 </div>
 <!-- closing div for .wrapper -->
 <script>
-    document.getElementById("professors").setAttribute("class", "active")
-    document.getElementById("profSubmenu").classList.toggle("show");
+    document.getElementById("students").setAttribute("class", "active")
+    document.getElementById("studSubmenu").classList.toggle("show");
 </script>
 
 <?php include "footer.php";

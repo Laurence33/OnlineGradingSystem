@@ -30,7 +30,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Manage Professor Page</h2>
+        <h2>Manage Professor</h2>
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">

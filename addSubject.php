@@ -48,7 +48,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Add Subject Page</h2>
+        <h2>Add Subject</h2>
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">

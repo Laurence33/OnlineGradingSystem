@@ -10,7 +10,7 @@ if (strlen($_SESSION['alogin']) == '') {
 
 
 if (isset($_POST['createPassword'])) {
-    $profId = $_POST['profId'];
+    $studId = $_POST['studId'];
     $username = $_POST['username'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
@@ -25,14 +25,14 @@ if (isset($_POST['createPassword'])) {
         $query1->bindParam(':username', $username, PDO::PARAM_STR);
         $query1->execute();
         $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
-        if ($query1->rowCount() > 1) {
+        if ($query1->rowCount() > 0) {
             $error = "Username is already in use.";
         } else {
-            $hash = md5($password);
             // Username is unused and password matches, add the credential to database
-            $sql2 = "INSERT INTO tbllogin(UserId, Role, UserName, Password) VALUES(:profid, 2,   :username, :password);";
+            $hash = md5($password);
+            $sql2 = "INSERT INTO tbllogin(UserId, Role, UserName, Password) VALUES(:studid, 3, :username, :password);";
             $query2 = $dbh->prepare($sql2);
-            $query2->bindParam(':profid', $profId, PDO::PARAM_STR);
+            $query2->bindParam(':studid', $studId, PDO::PARAM_STR);
             $query2->bindParam(':username', $username, PDO::PARAM_STR);
             $query2->bindParam(':password', $hash, PDO::PARAM_STR);
             $query2->execute();
@@ -67,7 +67,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Create Professor Credential</h2>
+        <h2>Create Student Credential</h2>
 
         <!-- BREADCRUMB -->
         <nav aria-label="breadcrumb">
@@ -76,8 +76,8 @@ include "header.php";
                     <i class="fas fa-home"></i>
                     <a class="text-primary" href="dashboard.php">Home</a>
                 </li>
-                <li class="breadcrumb-item">Professors</li>
-                <li class="breadcrumb-item active" aria-current="page">Create Professor Credential</li>
+                <li class="breadcrumb-item">Students</li>
+                <li class="breadcrumb-item active" aria-current="page">Create Student Credential</li>
             </ol>
         </nav>
         <!-- END OF BREADCRUMB -->
@@ -97,28 +97,28 @@ include "header.php";
         <form method="POST">
 
             <div class="form-group">
-                <label for="profId">Professor</label>
-                <select class="form-control" id="profId" name="profId">
+                <label for="studId">Student</label>
+                <select class="form-control" id="studId" name="studId">
                     <?php
-                    $sql = "SELECT id,ProfessorName from tblprofessors";
+                    $sql = "SELECT id,StudentName,StudentId from tblstudents";
                     $query = $dbh->prepare($sql);
                     $query->execute();
                     $results = $query->fetchAll(PDO::FETCH_OBJ);
                     $count = 0;
                     if ($query->rowCount() > 0) {
                         foreach ($results as $result) {
-                            $loginSql = "SELECT * FROM tbllogin WHERE UserId=:profid AND Role=2";
+                            $loginSql = "SELECT * FROM tbllogin WHERE UserId=:studid AND Role=3";
                             $loginQuery = $dbh->prepare($loginSql);
-                            $loginQuery->bindParam(':profid', $result->id);
+                            $loginQuery->bindParam(':studid', $result->id);
                             $loginQuery->execute();
                             if ($loginQuery->rowCount() > 0) continue;
                     ?>
-                            <option value="<?php echo htmlentities($result->id) ?>"><?php echo htmlentities($result->ProfessorName) ?></option>
+                            <option value="<?php echo htmlentities($result->id) ?>"><?php echo htmlentities($result->StudentName) ?></option>
                     <?php
                             $count += 1;
                         }
                         if ($count == 0) {
-                            echo '<option> No Professor to create credentials.</option>';
+                            echo '<option> No Student to create credentials.</option>';
                         }
                     } ?>
                 </select>
@@ -148,8 +148,8 @@ include "header.php";
 </div>
 <!-- closing div for .wrapper -->
 <script>
-    document.getElementById("professors").setAttribute("class", "active")
-    document.getElementById("profSubmenu").classList.toggle("show");
+    document.getElementById("students").setAttribute("class", "active")
+    document.getElementById("studSubmenu").classList.toggle("show");
 </script>
 
 <?php include "footer.php";

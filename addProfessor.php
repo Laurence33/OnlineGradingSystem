@@ -52,7 +52,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Add Professor Page</h2>
+        <h2>Add Professor</h2>
 
         <!-- BREADCRUMB -->
         <nav aria-label="breadcrumb">

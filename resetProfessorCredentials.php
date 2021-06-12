@@ -10,7 +10,7 @@ if (strlen($_SESSION['alogin']) == '') {
 
 
 if (isset($_POST['resetPassword'])) {
-    $profId = $_POST['profId'];
+    $loginId = $_POST['loginId'];
     $username = $_POST['username'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
@@ -18,12 +18,12 @@ if (isset($_POST['resetPassword'])) {
     if ($password != $cpassword) {
         $error = "Password does not match, please try again.";
     } else {
-
-        $sql2 = "UPDATE tbllogin SET UserName=:username Password=:password WHERE ProfessorId=:profid;";
+        $hash = md5($password);
+        $sql2 = "UPDATE tbllogin SET UserName=:username, Password=:password WHERE id=:loginid";
         $query2 = $dbh->prepare($sql2);
-        $query2->bindParam(':profid', $profId, PDO::PARAM_STR);
+        $query2->bindParam(':loginid', $loginId, PDO::PARAM_STR);
         $query2->bindParam(':username', $username, PDO::PARAM_STR);
-        $query2->bindParam(':password', md5($password), PDO::PARAM_STR);
+        $query2->bindParam(':password', $hash, PDO::PARAM_STR);
         $success = $query2->execute();
 
         if ($success) {
@@ -55,7 +55,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Create Professor Credential</h2>
+        <h2>Reset Professor Credential</h2>
 
         <!-- BREADCRUMB -->
         <nav aria-label="breadcrumb">
@@ -65,7 +65,7 @@ include "header.php";
                     <a class="text-primary" href="dashboard.php">Home</a>
                 </li>
                 <li class="breadcrumb-item">Professors</li>
-                <li class="breadcrumb-item active" aria-current="page">Create Professor Credential</li>
+                <li class="breadcrumb-item active" aria-current="page">Reset Professor Credential</li>
             </ol>
         </nav>
         <!-- END OF BREADCRUMB -->
@@ -85,8 +85,8 @@ include "header.php";
         <form method="POST">
 
             <div class="form-group">
-                <label for="profId">Professor</label>
-                <select class="form-control" id="profId" name="profId">
+                <label for="loginId">Professor</label>
+                <select class="form-control" id="loginId" name="loginId">
                     <?php
                     // get professor details
                     $sql = "SELECT id,ProfessorName,Status from tblprofessors";
@@ -97,13 +97,14 @@ include "header.php";
                         foreach ($results as $result) {
                             if (!$result->Status) continue; // do not show professor if inactive
                             // if the professor already has a credential, do not show on the options
-                            $loginSql = "SELECT * FROM tbllogin WHERE ProfessorId=:profid";
+                            $loginSql = "SELECT * FROM tbllogin WHERE UserId=:profid AND Role=2";
                             $loginQuery = $dbh->prepare($loginSql);
-                            $loginQuery->bindParam('profid', $result->id);
+                            $loginQuery->bindParam(':profid', $result->id);
                             $loginQuery->execute();
-                            if ($loginQuery->rowCount() > 0) continue;
+                            $profLogin = $loginQuery->fetch(PDO::FETCH_OBJ);
+                            if ($loginQuery->rowCount() == 0) continue;
                     ?>
-                            <option value="<?php echo htmlentities($result->id) ?>"><?php echo htmlentities($result->ProfessorName) ?></option>
+                            <option value="<?php echo htmlentities($profLogin->id) ?>"><?php echo htmlentities($result->ProfessorName) ?></option>
                     <?php }
                     } ?>
                 </select>
@@ -111,7 +112,7 @@ include "header.php";
 
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" name="username" class="form-control" id="username" placeholder="johnmichaels">
+                <input type="text" name="username" class="form-control" id="username">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
@@ -123,7 +124,7 @@ include "header.php";
                 <input type="password" name="cpassword" class="form-control" id="cpassword">
             </div>
 
-            <button type="submit" name="createPassword" class="btn btn-primary">Submit</button>
+            <button type="submit" name="resetPassword" class="btn btn-primary">Submit</button>
 
         </form>
 

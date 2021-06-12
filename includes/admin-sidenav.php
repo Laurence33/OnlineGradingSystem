@@ -85,6 +85,12 @@
                 <li>
                     <a href="manageStudent.php">Manage Student</a>
                 </li>
+                <li>
+                    <a href="createStudentCredential.php">Create Credential</a>
+                </li>
+                <li>
+                    <a href="resetStudentCredentials.php">Reset Password</a>
+                </li>
             </ul>
         </li>
         <li id="changePassword">

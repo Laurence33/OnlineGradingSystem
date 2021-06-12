@@ -8,15 +8,17 @@ if (strlen($_SESSION['alogin']) == '') {
 } else {
     if (isset($_POST['addClass'])) {
         $className = $_POST['className'];
-        $year = $_POST['year'];
-        $section = $_POST['section'];
+        $track = $_POST['track'];
+        $strand = $_POST['strand'];
+        $level = $_POST['level'];
         $status = 1;
 
-        $sql = "INSERT INTO  tblclasses(ClassName,Year,Section,Status) VALUES(:classname,:year,:section,:status)";
+        $sql = "INSERT INTO  tblclasses(ClassName,Track,Strand,Level,Status) VALUES(:classname,:track, :strand,:level,:status)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':classname', $className, PDO::PARAM_STR);
-        $query->bindParam(':year', $year, PDO::PARAM_STR);
-        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':track', $track, PDO::PARAM_STR);
+        $query->bindParam(':strand', $strand, PDO::PARAM_STR);
+        $query->bindParam(':level', $level, PDO::PARAM_STR);
         $query->bindParam(':status', $status, PDO::PARAM_STR);
         $query->execute();
         $lastInsertId = $dbh->lastInsertId();
@@ -78,17 +80,32 @@ include "header.php";
 
             <div class="form-group">
                 <label for="className">Class Name</label>
-                <input type="text" name="className" class="form-control" id="className" placeholder="BSIT3A">
+                <input type="text" name="className" class="form-control" id="className" placeholder="Emerald">
             </div>
 
             <div class="form-group">
-                <label for="year">Year Level</label>
-                <input type="number" minVal="1" maxVal="5" name="year" class="form-control" id="year" placeholder="3">
+                <label for="track">Track</label>
+                <select class="form-control" onchange="loadStrands()" name="track" id="track">
+                    <option value="Academic Track">Academic Track</option>
+                    <option value="Technical-Vocational-Livelihood Track">TVL Track</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="section">Section</label>
-                <input type="text" minlength="1" maxlength="1" name="section" class="form-control" id="section" placeholder="A">
+                <label for="strand">Strand</label>
+                <select class="form-control" name="strand" id="strand">
+                    <option value="Science Technology and Mathematics">STEM</option>
+                    <option value="Accountancy, Business, Management">ABM</option>
+                    <option value="Humanities and Social Sciences">HUMSS</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="level">Grade Level</label>
+                <select class="form-control" name="level" id="level">
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
             </div>
 
             <button type="submit" name="addClass" class="btn btn-primary">Submit</button>
@@ -101,6 +118,32 @@ include "header.php";
 </div>
 <!-- closing div for .wrapper -->
 <script>
+    function loadStrands() {
+        const track = document.getElementById('track');
+        const strand = document.getElementById('strand');
+        if (track.value == "Academic Track") {
+            strand.innerHTML = "";
+            var option = document.createElement("option");
+            option.value = "Science Technology and Mathematics";
+            option.text = "STEM";
+            strand.add(option);
+            option = document.createElement("option");
+            option.value = "Accountancy, Business, Management";
+            option.text = "ABM";
+            strand.add(option);
+            option = document.createElement("option");
+            option.value = "Humanities and Social Sciences";
+            option.text = "HUMSS";
+            strand.add(option);
+        } else if (track.value == "Technical-Vocational-Livelihood Track") {
+            strand.innerHTML = "";
+            var option = document.createElement("option");
+            option.value = "Bread and Pastry";
+            option.text = "Bread and Pastry";
+            strand.add(option);
+        }
+    }
+
     document.getElementById("classes").setAttribute("class", "active")
     document.getElementById("classesSubmenu").classList.toggle("show");
 </script>

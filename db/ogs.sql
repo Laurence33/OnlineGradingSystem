@@ -1,6 +1,6 @@
 -- phpMyAdmin SQL Dump
 -- https://www.phpmyadmin.net/
--- PHP Version: 7.4.10
+-- PHP Version: 7.4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -20,24 +20,13 @@ SET time_zone = "+08:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbladmin`
---
-
-CREATE TABLE `tbladmin` (
-  `id` int(11) NOT NULL,
-  `UserName` varchar(100) NOT NULL,
-  `Password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbllogin`
 --
 
 CREATE TABLE `tbllogin` (
   `id` int(11) NOT NULL,
-  `ProfessorId` int(11) NOT NULL,
+  `UserId` int(11) NOT NULL,
+  `Role` int(1) NOT NULL,
   `UserName` varchar(100) NOT NULL,
   `Password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -46,8 +35,8 @@ CREATE TABLE `tbllogin` (
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `tbladmin` (`id`, `UserName`, `Password`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3');
+INSERT INTO `tbllogin` (`id`, `Role`, `UserId`, `UserName`, `Password`) VALUES
+(1, 1, 1, 'admin', '21232f297a57a5a743894a0e4a801fc3');
 
 -- --------------------------------------------------------
 
@@ -57,9 +46,10 @@ INSERT INTO `tbladmin` (`id`, `UserName`, `Password`) VALUES
 
 CREATE TABLE `tblclasses` (
   `id` int(11) NOT NULL,
-  `ClassName` varchar(80) DEFAULT NULL,
-  `Year` int(4) NOT NULL,
-  `Section` varchar(5) NOT NULL,
+  `ClassName` varchar(50) DEFAULT NULL,
+  `Track` varchar(50) DEFAULT NULL,
+  `Strand` varchar(50) DEFAULT NULL,
+  `Level` int(2) NOT NULL,
   `Status` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -101,7 +91,7 @@ CREATE TABLE `tblprofessors` (
   `ProfessorName` varchar(100) NOT NULL,
   `ProfessorEmail` varchar(100) NOT NULL,
   `Gender` varchar(10) NOT NULL,
-  `Birthdate` varchar(100) NOT NULL,
+  `Birthdate` varchar(15) NOT NULL,
   `Status` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -130,10 +120,41 @@ CREATE TABLE `tblstudents` (
   `StudentName` varchar(100) NOT NULL,
   `StudentEmail` varchar(100) NOT NULL,
   `Gender` varchar(10) NOT NULL,
-  `Birthdate` varchar(100) NOT NULL,
+  `Birthdate` varchar(15) NOT NULL,
   `ClassId` int(11) NOT NULL,
   `Status` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcomponenttasks`
+--
+
+CREATE TABLE `tblcomponenttasks` (
+  `id` int(11) NOT NULL,
+  `LoadingId` int(11) NOT NULL,
+  `Component` varchar(25) NOT NULL,
+  `Number` varchar(100) NOT NULL,
+  `HighestScore` int(4) NOT NULL,
+  `Quarter` int(1) NOT NULL,
+  `Date` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblresults`
+--
+
+CREATE TABLE `tblresults` (
+  `id` int(11) NOT NULL,
+  `TaskId` int(11) NOT NULL,
+  `StudentId` varchar(11) NOT NULL,
+  `Score` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
 
@@ -151,12 +172,6 @@ CREATE TABLE `tblgrades` (
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `tbladmin`
---
-ALTER TABLE `tbladmin`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbllogin`
@@ -207,20 +222,29 @@ ALTER TABLE `tblsubjects`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tblcomponenttasks`
+--
+ALTER TABLE `tblcomponenttasks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tblresults`
+--
+ALTER TABLE `tblresults`
+  ADD PRIMARY KEY (`id`);
+
+
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
---
--- AUTO_INCREMENT for table `tbladmin`
---
-ALTER TABLE `tbladmin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbllogin`
 --
 ALTER TABLE `tbllogin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblclasses`
@@ -263,6 +287,21 @@ ALTER TABLE `tblsubjectadvising`
 --
 ALTER TABLE `tblsubjects`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tblsubjects`
+--
+ALTER TABLE `tblcomponenttasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tblsubjects`
+--
+ALTER TABLE `tblresults`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

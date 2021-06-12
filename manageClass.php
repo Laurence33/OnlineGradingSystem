@@ -30,7 +30,7 @@ include "header.php";
             </div>
         </nav>
 
-        <h2>Manage Class Page</h2>
+        <h2>Manage Class</h2>
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -48,8 +48,9 @@ include "header.php";
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Class Name</th>
-                    <th scope="col">Year Level</th>
-                    <th scope="col">Section</th>
+                    <th scope="col">Track</th>
+                    <th scope="col">Strand</th>
+                    <th scope="col">Grade Level</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -68,8 +69,9 @@ include "header.php";
                         <tr>
                             <th scope="row"><?php echo htmlentities($result->id); ?></th>
                             <td><?php echo htmlentities($result->ClassName); ?></td>
-                            <td><?php echo htmlentities($result->Year); ?></td>
-                            <td><?php echo htmlentities($result->Section); ?></td>
+                            <td><?php echo htmlentities($result->Track); ?></td>
+                            <td><?php echo htmlentities($result->Strand); ?></td>
+                            <td><?php echo htmlentities($result->Level); ?></td>
                             <td><?php if ($result->Status) echo "Active";
                                 else echo "Inactive"; ?></td>
                             <td>
@@ -86,8 +88,9 @@ include "header.php";
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Class Name</th>
-                    <th scope="col">Year Level</th>
-                    <th scope="col">Section</th>
+                    <th scope="col">Track</th>
+                    <th scope="col">Strand</th>
+                    <th scope="col">Grade Level</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>

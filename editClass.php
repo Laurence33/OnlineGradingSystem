@@ -15,16 +15,18 @@ if (!isset($_GET['classid'])) {
 
 if (isset($_POST['editClass'])) {
     $className = $_POST['className'];
-    $year = $_POST['year'];
-    $section = $_POST['section'];
+    $track = $_POST['track'];
+    $strand = $_POST['strand'];
+    $level = $_POST['level'];
     $status = $_POST['status'];
     $id = $_POST['id'];
 
-    $sql = "UPDATE tblclasses SET ClassName=:classname, Year=:year, Section=:section, Status=:status WHERE id=:id";
+    $sql = "UPDATE tblclasses SET ClassName=:classname, Track=:track, Strand=:strand, Level=:level, Status=:status WHERE id=:id";
     $query = $dbh->prepare($sql);
     $query->bindParam(':classname', $className, PDO::PARAM_STR);
-    $query->bindParam(':year', $year, PDO::PARAM_STR);
-    $query->bindParam(':section', $section, PDO::PARAM_STR);
+    $query->bindParam(':track', $track, PDO::PARAM_STR);
+    $query->bindParam(':strand', $strand, PDO::PARAM_STR);
+    $query->bindParam(':level', $level, PDO::PARAM_STR);
     $query->bindParam(':status', $status, PDO::PARAM_STR);
     $query->bindParam(':id', $id, PDO::PARAM_STR);
     $query->execute();
@@ -95,13 +97,40 @@ include "header.php";
                 </div>
 
                 <div class="form-group">
-                    <label for="year">Year Level</label>
-                    <input type="number" minVal="1" maxVal="5" name="year" class="form-control" id="year" placeholder="3" value="<?php echo htmlentities($result1->Year); ?>">
+                    <label for="track">Track</label>
+                    <select class="form-control" onchange="loadStrands()" name="track" id="track">
+                        <option value="Academic Track" <?php if ($result1->Track == "Academic Track") echo 'selected'; ?>>Academic Track</option>
+                        <option value="Technical-Vocational-Livelihood Track" <?php if ($result1->Track == "Technical-Vocational-Livelihood Track") echo 'selected'; ?>>TVL Track</option>
+                    </select>
                 </div>
+                <?php if ($result1->Track == "Academic Track") { ?>
+                    <div class="form-group">
+                        <label for="strand">Strand</label>
+                        <select class="form-control" name="strand" id="strand">
+                            <option value="Science Technology and Mathematics" <?php if ($result1->Strand == "Science Technology and Mathematics") echo 'selected'; ?>>STEM</option>
+                            <option value="Accountancy, Business, Management" <?php if ($result1->Strand == "Accountancy, Business, Management") echo 'selected'; ?>>ABM</option>
+                            <option value="Humanities and Social Sciences" <?php if ($result1->Strand == "Humanities and Social Sciences") echo 'selected'; ?>>HUMSS</option>
+                        </select>
+                    </div>
+                <?php
+                } else {
+                ?>
+                    <div class="form-group">
+                        <label for="strand">Strand</label>
+                        <select class="form-control" name="strand" id="strand">
+                            <option value="Bread and Pastry" <?php if ($result1->Strand == "Bread and Pastry") echo 'selected'; ?>>Bread and Pastry</option>
+                        </select>
+                    </div>
+                <?php
+                }
+                ?>
 
                 <div class="form-group">
-                    <label for="section">Section</label>
-                    <input type="text" minlength="1" maxlength="1" name="section" class="form-control" id="section" placeholder="A" value="<?php echo htmlentities($result1->Section); ?>">
+                    <label for="level">Grade Level</label>
+                    <select class="form-control" name="level" id="level">
+                        <option value="11" <?php if ($result1->Level == 11) echo 'selected' ?>>11</option>
+                        <option value="12" <?php if ($result1->Level == 12) echo 'selected' ?>>12</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -134,6 +163,31 @@ include "header.php";
 </div>
 <!-- closing div for .wrapper -->
 <script>
+    function loadStrands() {
+        const track = document.getElementById('track');
+        const strand = document.getElementById('strand');
+        if (track.value == "Academic Track") {
+            strand.innerHTML = "";
+            var option = document.createElement("option");
+            option.value = "Science Technology and Mathematics";
+            option.text = "STEM";
+            strand.add(option);
+            option = document.createElement("option");
+            option.value = "Accountancy, Business, Management";
+            option.text = "ABM";
+            strand.add(option);
+            option = document.createElement("option");
+            option.value = "Humanities and Social Sciences";
+            option.text = "HUMSS";
+            strand.add(option);
+        } else if (track.value == "Technical-Vocational-Livelihood Track") {
+            strand.innerHTML = "";
+            var option = document.createElement("option");
+            option.value = "Bread and Pastry";
+            option.text = "Bread and Pastry";
+            strand.add(option);
+        }
+    }
     document.getElementById("classes").setAttribute("class", "active")
     document.getElementById("classesSubmenu").classList.toggle("show");
 </script>
