@@ -8,6 +8,10 @@
   background-color: white;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 /*
 *
 * SIDE MENU 
@@ -287,3 +291,37 @@ a.logout:hover {
 * END OF SIDE MENU
 *
 */
+
+.fabutton {
+  background: none !important;
+  padding: 0px !important;
+  border: none !important;
+  height: 25px !important;
+}
+
+ul.pagination {
+  margin-bottom: 1px !important;
+}
+
+.pagination > li > a
+{
+    background-color: #FAFAFA;
+    color: black;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: white;
+    background-color: #495057;
+    border-color: #ddd;
+}
+
+.pagination > .disabled > a, 
+.pagination > .active > a  {
+  color: black !important;
+  background-color: #E9ECEF !important;
+  border-color: #E9ECEF !important;
+}

@@ -86,7 +86,7 @@ include "header.php";
                 ?>
                         <tr>
                             <th scope="row"><?php echo $cnt; ?></th>
-                            <td><?php echo htmlentities($classCode); ?></td>f
+                            <td><?php echo htmlentities($classCode); ?></td>
                             <td><?php echo htmlentities($profName); ?></td>
                             <td><?php if ($result->Status) echo "Active";
                                 else echo "Inactive"; ?></td>

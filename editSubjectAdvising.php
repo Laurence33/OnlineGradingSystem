@@ -16,14 +16,16 @@ if (isset($_POST['editSubjectAdvising'])) {
     $classCode = $_POST['classCode'];
     $classId = $_POST['classId'];
     $subjectId = $_POST['subjectId'];
+    $subjectType = $_POST['subjectType'];
     $status = $_POST['status'];
     $id = $_POST['id'];
 
-    $sql = "UPDATE tblsubjectAdvising SET ClassCode=:classcode, ClassId=:classid, SubjectId=:subjectid, Status=:status WHERE id=:id";
+    $sql = "UPDATE tblsubjectAdvising SET ClassCode=:classcode, ClassId=:classid, SubjectId=:subid, SubjectType=:subtype Status=:status WHERE id=:id";
     $query = $dbh->prepare($sql);
     $query->bindParam(':classcode', $classCode, PDO::PARAM_STR);
     $query->bindParam(':classid', $classId, PDO::PARAM_STR);
-    $query->bindParam(':subjectid', $subjectId, PDO::PARAM_STR);
+    $query->bindParam(':subid', $subjectId, PDO::PARAM_STR);
+    $query->bindParam(':subtype', $subjectType, PDO::PARAM_STR);
     $query->bindParam(':status', $status, PDO::PARAM_STR);
     $query->bindParam(':id', $id, PDO::PARAM_STR);
     $res = $query->execute();
@@ -142,6 +144,15 @@ include "header.php";
                     <select class="form-control" id="status" name="status">
                         <option value="1" <?php if ($result1->Status == 1) echo "selected"; ?>>Active</option>
                         <option value="0" <?php if ($result1->Status == 0) echo "selected"; ?>>Inactive</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subjectType">Subject Type</label>
+                    <select class="form-control" id="subjectType" name="subjectType">
+                        <option value="1">Core Subject</option>
+                        <option value="2">Work Immersion/Research/Business Enterprise Simulation(TVL only)/Exhibit/Performance</option>
+                        <option value="3">All other subjects</option>
                     </select>
                 </div>
 

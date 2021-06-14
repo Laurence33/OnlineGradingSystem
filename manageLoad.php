@@ -7,7 +7,8 @@ if (strlen($_SESSION['plogin']) == '') {
 }
 
 // The professor is logged in and can access the page
-
+$semester = $_GET['semester'];
+$quarter = $_GET['quarter'];
 $advisingId = $_GET['advisingid'];
 $sql = "SELECT * FROM tblsubjectadvising WHERE id=:id";
 $query = $dbh->prepare($sql);
@@ -16,6 +17,7 @@ $query->execute();
 $advising = $query->fetch(PDO::FETCH_OBJ);
 $loadSubjectId = $advising->SubjectId;
 $loadClassId = $advising->ClassId;
+$loadSubType = $advising->SubjectType;
 
 $sql = "SELECT * FROM tblsubjects WHERE id=:subjectid";
 $query = $dbh->prepare($sql);
@@ -28,17 +30,40 @@ $query = $dbh->prepare($sql);
 $query->bindParam(':classid', $loadClassId, PDO::PARAM_STR);
 $query->execute();
 $class = $query->fetch(PDO::FETCH_OBJ);
+$classTrack = $class->Track;
 
-if (isset($_POST['declareResult'])) {
-    $studentId = $_POST['studentId'];
-    $advisingId = $_POST['advisingId'];
-    $declareResult = $_POST['result'];
+if (isset($_POST['addTask'])) {
+    $quarter = $_POST['quarter'];
+    $component = $_POST['component'];
+    $taskNumber = $_POST['taskNumber'];
+    $highestScore = $_POST['highestScore'];
+    $advisingIdRec = $_POST['advisingId'];
 
-    $sql0 = "INSERT INTO tblgrades(StudentId, AdvisingId, Result) VALUES(:studentid, :advisingid, :result)";
+    $sql0 = "INSERT INTO tblcomponenttasks(Quarter, Component, TaskNumber, HighestScore, AdvisingId) VALUES(:quarter, :component, :tasknumber, :highestscore, :advisingid)";
     $query0 = $dbh->prepare($sql0);
-    $query0->bindParam(':studentid', $studentId);
+    $query0->bindParam(':quarter', $quarter);
+    $query0->bindParam(':component', $component);
+    $query0->bindParam(':tasknumber', $taskNumber);
+    $query0->bindParam(':highestscore', $highestScore);
     $query0->bindParam(':advisingid', $advisingId);
-    $query0->bindParam(':result', $declareResult);
+    $query0->execute();
+    $lastInsertId0 = $dbh->lastInsertId();
+    if ($lastInsertId0) {
+        $msg = "Task created successfully";
+    } else {
+        $error = "Something went wrong. Please try again";
+    }
+} else if (isset($_POST['declareResult'])) {
+
+    $studentId = $_POST['studentId'];
+    $taskId = $_POST['taskId'];
+    $studentScore = $_POST['studentScore'];
+
+    $sql0 = "INSERT INTO tblresults(TaskId, StudentId, Score) VALUES(:taskid, :studentid, :studscore)";
+    $query0 = $dbh->prepare($sql0);
+    $query0->bindParam(':taskid', $taskId);
+    $query0->bindParam(':studentid', $studentId);
+    $query0->bindParam(':studscore', $studentScore);
     $query0->execute();
     $lastInsertId0 = $dbh->lastInsertId();
     if ($lastInsertId0) {
@@ -47,18 +72,83 @@ if (isset($_POST['declareResult'])) {
         $error = "Something went wrong. Please try again";
     }
 } else if (isset($_POST['editResult'])) {
-    $gradeId = $_POST['gradeId'];
-    $declareResult = $_POST['result'];
+    $resultId = $_POST['resultId'];
+    $studentScore = $_POST['studentScore'];
 
-    $sql0 = "UPDATE tblgrades SET Result=:result WHERE id=:id";
+    $sql0 = "UPDATE tblresults SET Score=:studscore WHERE id=:id";
     $query0 = $dbh->prepare($sql0);
-    $query0->bindParam(':id', $gradeId);
-    $query0->bindParam(':result', $declareResult);
+    $query0->bindParam(':id', $resultId);
+    $query0->bindParam(':studscore', $studentScore);
     $res = $query0->execute();
     if ($res) {
         $msg = "Result Updated successfully.";
     } else {
         $error = "Something went wrong. Please try again";
+    }
+} else if (isset($_POST['postGrade'])) {
+    $pAdvisingId = $_POST['advisingId'];
+    $studentId = $_POST['studentId'];
+    $quarter = $_POST['quarter'];
+    $result = $_POST['result'];
+
+    $postGradeSQL = "INSERT INTO tblgrades(AdvisingId, StudentId, Quarter, Result) VALUES(:advisingid, :studentid, :quarter, :result)";
+    $postGradeQuery = $dbh->prepare($postGradeSQL);
+    $postGradeQuery->bindParam(':advisingid', $pAdvisingId, PDO::PARAM_STR);
+    $postGradeQuery->bindParam(':studentid', $studentId, PDO::PARAM_STR);
+    $postGradeQuery->bindParam(':quarter', $quarter, PDO::PARAM_STR);
+    $postGradeQuery->bindParam(':result', $result, PDO::PARAM_STR);
+    $postGradeQuery->execute();
+    $pLastInsertId = $dbh->lastInsertId();
+    if ($pLastInsertId) {
+        $msg = "Grade calculated and posted.";
+    } else {
+        $error = "Something went wrong. Please try again";
+    }
+} else if (isset($_POST['repostGrade'])) {
+    $gradeId = $_POST['gradeId'];
+    $result = $_POST['result'];
+
+    $repostSQL = "UPDATE tblgrades SET Result=:result WHERE id=:gradeid";
+    $repostQuery = $dbh->prepare($repostSQL);
+    $repostQuery->bindParam(':gradeid', $gradeId, PDO::PARAM_STR);
+    $repostQuery->bindParam(':result', $result, PDO::PARAM_STR);
+    $repostRes = $repostQuery->execute();
+    if ($repostRes) {
+        $msg = "Grade recalculated and posted";
+    } else {
+        $error = "Something went wrong, please try again.";
+    }
+} else if (isset($_POST['postFinalGrade'])) {
+    $finalGrade = $_POST['finalGrade'];
+    $studentId = $_POST['studentId'];
+    $advisingId = $_POST['advisingId'];
+    echo "postFinalGrade Requested.";
+
+    $sql = "INSERT INTO tblgrades(StudentId, AdvisingId, Quarter, Result) VALUES(:studentid, :advisingid, 5, :result)";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(":studentid", $studentId, PDO::PARAM_STR);
+    $query->bindParam(":advisingid", $advisingId, PDO::PARAM_STR);
+    $query->bindParam(":result", $finalGrade, PDO::PARAM_STR);
+    $query->execute();
+    $success = $dbh->lastInsertId();
+    if ($success) {
+        $msg = "Final Grade Posted";
+    } else {
+        $error = "Something went wrong, please try again.";
+    }
+} else if (isset($_POST['repostFinalGrade'])) {
+    $gradeId = $_POST['gradeId'];
+    $finalGrade = $_POST['finalGrade'];
+
+    $sql = "UPDATE tblgrades SET Result=:finalgrade WHERE id=:gradeid && Quarter=5";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(":finalgrade", $finalGrade, PDO::PARAM_STR);
+    $query->bindParam(":gradeid", $gradeId, PDO::PARAM_STR);
+    $res = $query->execute();
+    if ($res) {
+        $msg = "Updated final grade posted.";
+    } else {
+        $error = "Something went wrong, please try again";
     }
 }
 
@@ -93,8 +183,8 @@ include "header.php";
                     <i class="fas fa-home"></i>
                     <a href="dashboard.php">Home</a>
                 </li>
-                <li class="breadcrumb-item"><?php echo htmlentities($class->ClassName) . "-" . htmlentities($subject->SubjectName) ?></li>
-                <li class="breadcrumb-item active" aria-current="page">Manage Grades</li>
+                <li class="breadcrumb-item">Manage Load</li>
+                <li class="breadcrumb-item active" aria-current="page"><?php echo htmlentities($class->ClassName) . "-" . htmlentities($subject->SubjectName) ?></li>
             </ol>
         </nav>
 
@@ -108,74 +198,65 @@ include "header.php";
                 <strong>Oh snap!</strong> <?php echo htmlentities($error); ?>
             </div>
         <?php } ?>
-        <!-- END or Success/Error Message -->
-
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Result</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php
-                $sql = "SELECT * FROM  tblstudents WHERE ClassId=:classid";
-                $query = $dbh->prepare($sql);
-                $query->bindParam(':classid', $loadClassId, PDO::PARAM_STR);
-                $query->execute();
-                $results = $query->fetchAll(PDO::FETCH_OBJ);
-                $cnt = 1;
-                if ($query->rowCount() > 0) {
-                    foreach ($results as $result) {
-                        $studentId = $result->id;
-                        $sql1 = "SELECT * FROM  tblgrades WHERE StudentId=:studid AND AdvisingId=:advisingid";
-                        $query1 = $dbh->prepare($sql1);
-                        $query1->bindParam(':studid', $result->id, PDO::PARAM_STR);
-                        $query1->bindParam(':advisingid', $advisingId, PDO::PARAM_STR);
-                        $query1->execute();
-                        $result1 = $query1->fetch(PDO::FETCH_OBJ);
-                ?>
-                        <tr>
-                            <th scope="row"><?php echo $cnt ?></th>
-                            <td><?php echo htmlentities($result->StudentName); ?></td>
-                            <td><em><?php if ($result1->Result) echo htmlentities($result1->Result);
-                                    else echo "Not Declared" ?></em></td>
-                            <td>
-                                <?php if ($result1->Result) { ?>
-                                    <a href="#" data-toggle="modal" data-target="#exampleModal" onclick="editResult(<?php echo  $result1->id; ?>, '<?php echo $result->StudentName; ?>', <?php echo $result1->Result; ?>)">
-                                        <i class="fa fa-edit" title="Edit Result"></i>
-                                    </a>
-                                <?php } else { ?>
-                                    <a href="#" data-toggle="modal" data-target="#exampleModal" onclick="declareResult(<?php echo  $result->id; ?>, '<?php echo $result->StudentName; ?>', <?php echo $advisingId; ?>)">
-                                        <i class="fa fa-plus-square" title="Declare Result"></i>
-                                    </a>
-                                <?php } ?>
-
-                            </td>
-                        </tr>
-                <?php
-                        $cnt += 1;
-                    }
-                }
-                ?>
-            </tbody>
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Result</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-        </table>
+        <p class="text-dark"><b>Grade and Section:</b> <?php echo $class->Level . "-" . $class->ClassName ?></p>
+        <p class="text-dark"><b>Subject and Type:</b> <?php echo $subject->SubjectName . "(";
+                                                        if ($advising->SubjectType == 1) echo  "Core Subject)";
+                                                        else if ($advising->SubjectType == 2) echo "Specialization";
+                                                        else if ($advising->SubjectType == 3) echo "Minor Subject"; ?></p>
+        <p class="text-dark"><b>Track:</b> <?php echo $class->Track ?></p>
+        <!-- Add Task Button -->
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col d-flex flex-row-reverse">
+                    <button type="button" class="btn btn-primary margin" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- Quarter/Semester  Navigation-->
+        <div class="d-flex justify-content-between">
+            <nav aria-label="Quarter">
+                <ul class="pagination" color="secondary">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Quarter:</a>
+                    </li>
+                    <li class="page-item <?php if ($quarter == 1) echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=1">1</a></li>
+                    <li class="page-item <?php if ($quarter == 2) echo 'active' ?>" aria-current="page">
+                        <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=2">2</a>
+                    </li>
+                    <li class="page-item <?php if ($quarter == 3) echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=3">3</a></li>
+                    <li class="page-item <?php if ($quarter == 4) echo 'active' ?>">
+                        <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=4">4</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav aria-label="Quarter">
+                <ul class="pagination" color="secondary">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Semestral Grades:</a>
+                    </li>
+                    <li class="page-item <?php if ($semester == 1) echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&semester=1">1</a></li>
+                    <li class="page-item <?php if ($semester == 2) echo 'active' ?>" aria-current="page">
+                        <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&semester=2">2</a>
+                    </li>
+                    <li class="page-item <?php if ($semester == 'final') echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&semester=final">Finals</a></li>
+                </ul>
+            </nav>
+        </div>
+        <?php
+        if ($quarter >= 1 && $quarter <= 4) {
+            include "./includes/quarterTable.php";
+        } else if ($semester == 1 || $semester == 2) {
+            include "./includes/semestralTable.php";
+        } else if ($semester == 'final') {
+            include "./includes/finalsTable.php";
+        }
+        ?>
 
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Declare Result Modal -->
+    <div class="modal fade" id="declareResultModal" tabindex="-1" role="dialog" aria-labelledby="declareResultModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -188,48 +269,121 @@ include "header.php";
                     <div class="modal-body">
 
                         <input type="hidden" name="studentId">
-                        <input type="hidden" name="advisingId">
-                        <input type="hidden" name="gradeId">
+                        <input type="hidden" name="taskId">
+                        <input type="hidden" name="resultId">
 
                         <div class="form-group">
                             <label for="student">Student</label>
-                            <input readonly type="text" name="studentName" class="form-control" id="student" placeholder="John Doe">
+                            <input readonly type="text" name="studentName" class="form-control" id="student">
                         </div>
 
                         <div class="form-group">
-                            <label for="result">Result</label>
-                            <input required type="number" minVal="0" maxVal="100" name="result" class="form-control" id="result" placeholder="96">
+                            <label for="component">Component</label>
+                            <input readonly type="text" name="component" class="form-control" id="component">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskNumber">Task Number</label>
+                            <input readonly type="number" name="taskNumber" class="form-control" id="taskNumber">
+                        </div>
+                        <div class="form-group">
+                            <label for="highestScore">Highest Possible Score</label>
+                            <input readonly type="number" name="highestScore" class="form-control" id="highestScore">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentScore">Student Score</label>
+                            <input type="number" min="0" name="studentScore" class="form-control" id="studentScore">
                         </div>
 
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" id="action" name="declareResult" class="btn btn-primary">Declare Mark</button>
+                        <button type="submit" id="resultAction" name="declareResult" class="btn btn-primary">Declare Mark</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <!-- Add Task Modal -->
+    <div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTaskModalLabel">Add Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST">
+                    <div class="modal-body">
 
+                        <input type="hidden" name="advisingId" value="<?php echo $advisingId ?>">
+
+                        <div class="form-group">
+                            <label for="quarterSelect">Quarter</label>
+                            <select class="form-control" id="quarterSelect" name="quarter">
+                                <option value="1" <?php if ($quarter == 1) echo 'selected'; ?>>1</option>
+                                <option value="2" <?php if ($quarter == 2) echo 'selected'; ?>>2</option>
+                                <option value="3" <?php if ($quarter == 3) echo 'selected'; ?>>3</option>
+                                <option value="4" <?php if ($quarter == 4) echo 'selected'; ?>>4</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="componentSelect">Component</label>
+                            <select class="form-control" id="componentSelect" name="component">
+                                <option value="Written Work">Written Work</option>
+                                <option value="Performance Task">Performance Task</option>
+                                <option value="Quarterly Assessment">Quarterly Assessment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskNumber">Task Number</label>
+                            <input type="number" min="1" max="10" name="taskNumber" class="form-control" id="taskNumber">
+                        </div>
+                        <div class="form-group">
+                            <label for="highestScore">Highest Possible Score</label>
+                            <input type="number" min="1" max="9999" name="highestScore" class="form-control" id="highestScore">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" id="action" name="addTask" class="btn btn-primary">Add Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- closing div for .wrapper -->
+
 <script>
     document.getElementById("subjects").setAttribute("class", "active");
     document.getElementById("SubjectsSubmenu").classList.toggle("show");
 
-    function editResult(gradeId, studentName, result) {
-        $("input[name=gradeId]").val(gradeId);
+    function editResult(resultId, studentScore, studentName, taskComponent, taskNumber, taskHighestScore) {
+        $("input[name=resultId]").val(resultId);
+        $("input[name=studentScore]").val(studentScore);
         $("input[name=studentName]").val(studentName);
-        $("input[name=result]").val(result);
-        $("button[id=action]").text('Change Result');
-        $("button[id=action]").attr("name", "editResult");
+        $("input[name=component]").val(taskComponent);
+        $("input[name=taskNumber]").val(taskNumber);
+        $("input[name=highestScore]").val(taskHighestScore);
+        $("button[id=resultAction]").text('Change Result');
+        $("button[id=resultAction]").attr("name", "editResult");
+        $("input[name=studentScore]").attr("max", taskHighestScore);
     }
 
-    function declareResult(studentId, studentName, advisingId) {
+    function declareResult(taskId, studentId, studentName, taskComponent, taskNumber, taskHighestScore) {
+        console.log("Called");
+        $("input[name=taskId]").val(taskId);
         $("input[name=studentId]").val(studentId);
         $("input[name=studentName]").val(studentName);
-        $("input[name=advisingId]").val(advisingId);
+        $("input[name=component]").val(taskComponent);
+        $("input[name=taskNumber]").val(taskNumber);
+        $("input[name=highestScore]").val(taskHighestScore);
+        $("input[name=studentScore]").attr("max", taskHighestScore);
     }
 </script>
 

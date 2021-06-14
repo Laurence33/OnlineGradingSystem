@@ -50,6 +50,7 @@ include "header.php";
                     <th scope="col">Class Code</th>
                     <th scope="col">Class Name</th>
                     <th scope="col">Subject Name</th>
+                    <th scope="col">Subject Type</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -63,6 +64,7 @@ include "header.php";
                 $cnt = 1;
                 if ($query->rowCount() > 0) {
                     foreach ($results as $result) {
+                        $subType = $result->SubjectType;
                         $sql1 = "SELECT * FROM  tblsubjects WHERE id=:subid";
                         $query1 = $dbh->prepare($sql1);
                         $query1->bindParam(':subid', $result->SubjectId, PDO::PARAM_STR);
@@ -80,8 +82,17 @@ include "header.php";
                         <tr>
                             <th scope="row"><?php echo $cnt; ?></th>
                             <td><?php echo htmlentities($result->ClassCode); ?></td>
-                            <td><?php echo htmlentities($className); ?></td>f
+                            <td><?php echo htmlentities($className); ?></td>
                             <td><?php echo htmlentities($subName); ?></td>
+                            <td><?php
+                                if ($subType == 1) {
+                                    echo 'Core Subject';
+                                } else if ($subType == 2) {
+                                    echo 'Work Immersion/Research/Business Enterprise Simulation(TVL only)/Exhibit/Performance';
+                                } else if ($subType == 3) {
+                                    echo 'Other Subject';
+                                }
+                                ?></td>
                             <td><?php if ($result->Status) echo "Active";
                                 else echo "Inactive"; ?></td>
                             <td>
@@ -100,6 +111,7 @@ include "header.php";
                     <th scope="col">Class Code</th>
                     <th scope="col">Class Name</th>
                     <th scope="col">Subject Name</th>
+                    <th scope="col">Subject Type</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>

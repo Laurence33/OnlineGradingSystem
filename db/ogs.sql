@@ -77,6 +77,7 @@ CREATE TABLE `tblsubjectadvising` (
   `ClassCode` varchar(12) NOT NULL,
   `ClassId` int(11) NOT NULL,
   `SubjectId` int(11) NOT NULL,
+  `SubjectType` int(1) NOT NULL,
   `Status` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -133,12 +134,12 @@ CREATE TABLE `tblstudents` (
 
 CREATE TABLE `tblcomponenttasks` (
   `id` int(11) NOT NULL,
-  `LoadingId` int(11) NOT NULL,
+  `AdvisingId` int(11) NOT NULL,
   `Component` varchar(25) NOT NULL,
-  `Number` varchar(100) NOT NULL,
+  `TaskNumber` varchar(100) NOT NULL,
   `HighestScore` int(4) NOT NULL,
   `Quarter` int(1) NOT NULL,
-  `Date` varchar(15) NOT NULL
+  `Date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -166,7 +167,8 @@ CREATE TABLE `tblgrades` (
   `id` int(11) NOT NULL,
   `StudentId` varchar(100) DEFAULT NULL,
   `AdvisingId` int(11) DEFAULT NULL,
-  `Result` int(3) DEFAULT NULL
+  `Quarter` int(1) DEFAULT NULL,
+  `Result` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

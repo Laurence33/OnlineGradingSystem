@@ -52,7 +52,14 @@ include "header.php";
 ?>
 
 <div class="wrapper">
-    <?php include "includes/admin-sidenav.php"; ?>
+
+    <?php
+    if (isset($_SESSION['alogin'])) {
+        include "includes/admin-sidenav.php";
+    } else {
+        include "includes/prof-sidenav.php";
+    }
+    ?>
 
     <!-- Page Content  -->
     <div id="content">
