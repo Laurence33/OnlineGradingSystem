@@ -1,8 +1,14 @@
 <!-- Sidebar  -->
 <nav id="sidebar">
-    <div class="sidebar-header">
+    <ul class="list-unstyled CTAs" id="logo" style="padding-bottom:0;">
+        <li>
+            <img class="col-md-12 col-sm-2" src="./assets/img/school-logo.png" alt="Baybayog National High School">
+
+        </li>
+    </ul>
+    <div class="sidebar-header" id="header" style="padding-top: 0; padding-bottom:0;">
         <br>
-        <h4>OGS | Admin</h4>
+        <h4 class="text-center">OGS | Admin</h4>
         <strong>OGS</strong>
     </div>
 
@@ -106,4 +112,5 @@
             <a href="logout.php" class="logout">Logout</a>
         </li>
     </ul>
+
 </nav>

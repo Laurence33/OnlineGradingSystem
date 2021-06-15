@@ -58,36 +58,36 @@ if (isset($_SESSION['alogin']) or isset($_SESSION['plogin'])) {
 }
 include "header.php";
 ?>
-<div class="container-fluid">
-    <div class="container-fluid text-center">
-        <br>
-        <h1>Online Grading System</h1>
-    </div>
-    <br>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="container">
-                <div class="row">
-                    <div class="col-6 align-self-center">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Login</h5>
-                                <form method="POST">
-                                    <div class="form-group col-md-6">
-                                        <label for="username">Username</label>
-                                        <input type="text" class="form-control" id="username" name="username" aria-describedby="unameHelp">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="password">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary" name="login">Submit</button>
-                                </form>
-                            </div>
-                        </div>
+<div class="container-fluid" style="background:url('./assets/img/bg.jpg'); background-size: 100vw 100vh; height: 100vh;">
+
+    <div class="row d-flex align-items-center justify-content-center " style="height: 100vh;">
+        <div class="col-6 align-self-center">
+            <div class="card align-middle" style="height: 70vh; width:50vw">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <img class="col-sm-3" src="./assets/img/school-logo.png" alt="Baybayog National High School">
                     </div>
+                    <h4 class="text-center">Online Grading System for SHS Department</h4>
+                    <br><br>
+                    <h5 class="card-title">Login</h5>
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" aria-describedby="unameHelp">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                        </div>
+                        <div class="d-flex flex-column-reverse">
+                            <button type="submit" class="btn btn-primary" name="login">Submit</button>
+
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
+
 </div>

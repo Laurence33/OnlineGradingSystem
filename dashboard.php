@@ -30,8 +30,8 @@ include "header.php";
                     <i class="fas fa-align-justify"></i>
                     <span>Menu</span>
                 </button>
-
-                <h2>&nbsp; Online Grading System</h2>
+                <h4>Baybayog National High School - Senior High School Department</h4>
+                <h4>&nbsp; Online Grading System</h4>
 
 
             </div>
