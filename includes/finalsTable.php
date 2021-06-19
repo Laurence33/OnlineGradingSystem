@@ -61,8 +61,6 @@
                             } else {
                                 echo "<td>$finalGrade</td>";
                             }
-                    ?>
-                    <?php
                         } else {
                             echo "<form method='POST'><input type='hidden' name='studentId' value='$learner->id'></input><input type='hidden' name='advisingId' value='$advisingId'></input><input type='hidden' name='finalGrade' value='$finalGrade'></input><td > $finalGrade &nbsp;<button class='fabutton pointer' type='submit' name='postFinalGrade' data-bs-toggle='tooltip' data-bs-placement='top' title='Post Final Grade'><i class='fas fa-plus'></i></button></td></form>";
                         }

@@ -78,6 +78,7 @@ CREATE TABLE `tblsubjectadvising` (
   `ClassId` int(11) NOT NULL,
   `SubjectId` int(11) NOT NULL,
   `SubjectType` int(1) NOT NULL,
+  `Semester` int(1) NOT NULL,
   `Status` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

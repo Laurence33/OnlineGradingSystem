@@ -184,12 +184,12 @@ foreach ($countResults as $countResult) {
                     <!-- WW PS-->
                     <td><?php if ($WWScoreFlag) {
                             $wwPS = ($WWScoreTotal / $WWtotal) * 100;
-                            echo $wwPS;
+                            echo number_format((float)$wwPS, 2, '.', '');
                         } else echo 'N/A' ?></td>
                     <!-- WW WS -->
                     <td><?php if ($WWScoreFlag) {
                             $wwWS = $wwPS * $WWweight;
-                            echo $wwWS;
+                            echo number_format((float)$wwWS, 2, '.', '');
                         } else echo 'N/A' ?></td>
                     <?php
                     $PTscoreFlag = false;
@@ -223,12 +223,12 @@ foreach ($countResults as $countResult) {
                     <!-- PW PS-->
                     <td><?php if ($PTscoreFlag) {
                             $ptPS = ($PTScoreTotal / $PTtotal) * 100;
-                            echo $ptPS;
+                            echo number_format((float)$ptPS, 2, '.', '');
                         } else echo 'N/A' ?></td>
                     <!-- PT WS -->
                     <td><?php if ($PTscoreFlag) {
                             $ptWS = $ptPS * $PTweight;
-                            echo $ptWS;
+                            echo number_format((float)$ptWS, 2, '.', '');
                         } else echo 'N/A' ?></td>
                     <?php
                     $QAscoreFlag = false;

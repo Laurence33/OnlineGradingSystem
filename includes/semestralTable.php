@@ -3,7 +3,7 @@
         <tr class="table-secondary">
             <th scope="col">#</th>
             <th scope="col">Learner's Name</th>
-            <?php if ($semester == 1) { ?>
+            <?php if ($advising->Semester == 1) { ?>
                 <th>First Quarter</th>
                 <th>Second Quarter</th>
                 <th>First Semester Grade</th>
@@ -43,7 +43,7 @@
                     $semGradeCount = 0;
                     $semesterGrade = 0;
                     foreach ($learnerGrades as $learnerGrade) {
-                        if ($semester == 1) {
+                        if ($advising->Semester == 1) {
                             if ($learnerGrade->Quarter == 1) {
                                 echo "<td  >$learnerGrade->Result</td>";
                                 $semGradeCount++;
@@ -53,7 +53,7 @@
                                 $semGradeCount++;
                                 $semesterGrade += $learnerGrade->Result;
                             }
-                        } else if ($semester == 2) {
+                        } else if ($advising->Semester == 2) {
                             if ($learnerGrade->Quarter == 3) {
                                 echo "<td  >$learnerGrade->Result</td>";
                                 $semGradeCount++;
@@ -71,14 +71,27 @@
                         }
                     }
                     if ($semGradeCount == 2) {
-                        $semesterGrade /= 2;
-                        echo "<td  >$semesterGrade</td>";
-                        if ($semesterGrade >= 75) {
+                        $finalGrade = $semesterGrade / 2;
+                        $finalGradeQuery = $dbh->prepare("SELECT * FROM tblgrades WHERE StudentId=:studentid AND AdvisingId=:advisingid AND Quarter=5");
+                        $finalGradeQuery->bindParam(":studentid", $learner->id, PDO::PARAM_STR);
+                        $finalGradeQuery->bindParam(":advisingid", $advising->id, PDO::PARAM_STR);
+                        $finalGradeQuery->execute();
+                        if ($finalGradeQuery->rowCount() == 1) {
+                            $finalGradeRes = $finalGradeQuery->fetch(PDO::FETCH_OBJ);
+                            if ($finalGrade != $finalGradeRes->Result) {
+                                echo "<form method='POST'><input type='hidden' name='gradeId' value='$finalGradeRes->id'></input><input type='hidden' name='finalGrade' value='$finalGrade'></input><td>$finalGrade &nbsp;<button class='fabutton pointer' type='submit' name='repostFinalGrade' data-bs-toggle='tooltip' data-bs-placement='top' title='Post Updated Final Grade'><i class='fas fa-sync'></i></button></td></form>";
+                            } else {
+                                echo "<td>$finalGrade</td>";
+                            }
+                        } else {
+                            echo "<form method='POST'><input type='hidden' name='studentId' value='$learner->id'></input><input type='hidden' name='advisingId' value='$advisingId'></input><input type='hidden' name='finalGrade' value='$finalGrade'></input><td > $finalGrade &nbsp;<button class='fabutton pointer' type='submit' name='postFinalGrade' data-bs-toggle='tooltip' data-bs-placement='top' title='Post Final Grade'><i class='fas fa-plus'></i></button></td></form>";
+                        }
+                        if ($finalGrade >= 75) {
                             echo "<td><b>PASSED</b></td>";
                         } else echo "<td><b>FAILED</b></td>";
                     } else {
-                        echo "<td  >N/A</td>";
-                        echo "<td  >N/A</td>";
+                        echo "<td>N/A</td>";
+                        echo "<td>N/A</td>";
                     }
                     ?>
                 </tr>
@@ -89,7 +102,7 @@
         <tr class="table-secondary">
             <th scope="col">#</th>
             <th scope="col">Learner's Name</th>
-            <?php if ($semester == 1) { ?>
+            <?php if ($advising->Semester == 1) { ?>
                 <th>First Quarter</th>
                 <th>Second Quarter</th>
                 <th>First Semester Grade</th>

@@ -83,7 +83,7 @@ if (isset($_SESSION['slogin'])) {
                             $subjectQuery->execute();
                             $subject = $subjectQuery->fetch(PDO::FETCH_OBJ);
 
-                            $gradesSql = "SELECT * FROM tblgrades WHERE StudentId = :studid AND AdvisingId = :advisingid";
+                            $gradesSql = "SELECT * FROM tblgrades WHERE StudentId = :studid AND AdvisingId = :advisingid AND Quarter=5";
                             $gradesQuery = $dbh->prepare($gradesSql);
                             $gradesQuery->bindParam(':studid', $student->id);
                             $gradesQuery->bindParam(':advisingid', $advising->id);

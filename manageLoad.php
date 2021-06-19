@@ -7,7 +7,7 @@ if (strlen($_SESSION['plogin']) == '') {
 }
 
 // The professor is logged in and can access the page
-$semester = $_GET['semester'];
+$semester = 1;
 $quarter = $_GET['quarter'];
 $advisingId = $_GET['advisingid'];
 $sql = "SELECT * FROM tblsubjectadvising WHERE id=:id";
@@ -18,6 +18,8 @@ $advising = $query->fetch(PDO::FETCH_OBJ);
 $loadSubjectId = $advising->SubjectId;
 $loadClassId = $advising->ClassId;
 $loadSubType = $advising->SubjectType;
+$semester = $advising->Semester;
+if ($semester == 2 && $quarter == 1) $quarter = 3;
 
 $sql = "SELECT * FROM tblsubjects WHERE id=:subjectid";
 $query = $dbh->prepare($sql);
@@ -122,7 +124,6 @@ if (isset($_POST['addTask'])) {
     $finalGrade = $_POST['finalGrade'];
     $studentId = $_POST['studentId'];
     $advisingId = $_POST['advisingId'];
-    echo "postFinalGrade Requested.";
 
     $sql = "INSERT INTO tblgrades(StudentId, AdvisingId, Quarter, Result) VALUES(:studentid, :advisingid, 5, :result)";
     $query = $dbh->prepare($sql);
@@ -220,36 +221,27 @@ include "header.php";
                     <li class="page-item disabled">
                         <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Quarter:</a>
                     </li>
-                    <li class="page-item <?php if ($quarter == 1) echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=1">1</a></li>
-                    <li class="page-item <?php if ($quarter == 2) echo 'active' ?>" aria-current="page">
-                        <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=2">2</a>
-                    </li>
-                    <li class="page-item <?php if ($quarter == 3) echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=3">3</a></li>
-                    <li class="page-item <?php if ($quarter == 4) echo 'active' ?>">
-                        <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=4">4</a>
-                    </li>
-                </ul>
-            </nav>
-            <nav aria-label="Quarter">
-                <ul class="pagination" color="secondary">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Semestral Grades:</a>
-                    </li>
-                    <li class="page-item <?php if ($semester == 1) echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&semester=1">1</a></li>
-                    <li class="page-item <?php if ($semester == 2) echo 'active' ?>" aria-current="page">
-                        <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&semester=2">2</a>
-                    </li>
-                    <li class="page-item <?php if ($semester == 'final') echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&semester=final">Finals</a></li>
+                    <?php
+                    if ($advising->Semester == 1) { ?>
+                        <li class="page-item <?php if ($quarter == 1) echo 'active'; ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId; ?>&quarter=1">1</a></li>
+                        <li class="page-item <?php if ($quarter == 2) echo 'active'; ?>" aria-current="page">
+                            <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId; ?>&quarter=2">2</a>
+                        </li>
+                    <?php } else { ?>
+                        <li class="page-item <?php if ($quarter == 3) echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId; ?>&quarter=3">3</a></li>
+                        <li class="page-item <?php if ($quarter == 4) echo 'active' ?>">
+                            <a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId; ?>&quarter=4">4</a>
+                        </li>
+                    <?php } ?>
+                    <li class="page-item <?php if ($quarter == 'final') echo 'active' ?>"><a class="page-link" href="manageLoad.php?advisingid=<?php echo $advisingId ?>&quarter=final">Semestral Grades</a></li>
                 </ul>
             </nav>
         </div>
         <?php
         if ($quarter >= 1 && $quarter <= 4) {
             include "./includes/quarterTable.php";
-        } else if ($semester == 1 || $semester == 2) {
+        } else if ($quarter == 'final') {
             include "./includes/semestralTable.php";
-        } else if ($semester == 'final') {
-            include "./includes/finalsTable.php";
         }
         ?>
 
@@ -322,12 +314,7 @@ include "header.php";
 
                         <div class="form-group">
                             <label for="quarterSelect">Quarter</label>
-                            <select class="form-control" id="quarterSelect" name="quarter">
-                                <option value="1" <?php if ($quarter == 1) echo 'selected'; ?>>1</option>
-                                <option value="2" <?php if ($quarter == 2) echo 'selected'; ?>>2</option>
-                                <option value="3" <?php if ($quarter == 3) echo 'selected'; ?>>3</option>
-                                <option value="4" <?php if ($quarter == 4) echo 'selected'; ?>>4</option>
-                            </select>
+                            <input type="text" class="form-control" readonly name="quarter" id="quarter" value="<?php echo $quarter; ?>">
                         </div>
 
                         <div class="form-group">
