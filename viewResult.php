@@ -70,13 +70,21 @@ if (isset($_SESSION['slogin'])) {
                         <tr class="table-secondary">
                             <th scope="col">#</th>
                             <th scope="col">Subject</th>
+                            <th scope="col">1st/3rd Quarter</th>
+                            <th scope="col">2nd/4th Quarter</th>
                             <th scope="col">Result</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <thead>
+                            <tr class="table-secondary">
+                                <th colspan="5">First Semester</th>
+                            </tr>
+                        </thead>
                         <?php
                         $cnt = 1;
                         foreach ($advisings as $advising) {
+                            if ($advising->Semester == 2) continue;
                             $subjectSql = "SELECT * FROM tblsubjects WHERE id=:subjectid";
                             $subjectQuery = $dbh->prepare($subjectSql);
                             $subjectQuery->bindParam('subjectid', $advising->SubjectId);
@@ -88,23 +96,97 @@ if (isset($_SESSION['slogin'])) {
                             $gradesQuery->bindParam(':studid', $student->id);
                             $gradesQuery->bindParam(':advisingid', $advising->id);
                             $res = $gradesQuery->execute();
-                            $result = $gradesQuery->fetch(PDO::FETCH_OBJ);
+                            $gradeResults = $gradesQuery->fetchAll(PDO::FETCH_OBJ);
+                            foreach ($gradeResults as $result) {
+
+                                $quarter1SQL = "SELECT * FROM tblgrades WHERE StudentId = $student->id AND AdvisingId = $advising->id AND Quarter = 1";
+                                $quarter1Query = $dbh->prepare($quarter1SQL);
+                                $res = $quarter1Query->execute();
+                                if ($res) {
+                                    $quarter1Res = $quarter1Query->fetch(PDO::FETCH_OBJ);
+                                }
+                                $quarter2SQL = "SELECT * FROM tblgrades WHERE StudentId = $student->id AND AdvisingId = $advising->id AND Quarter = 2";
+                                $quarter2Query = $dbh->prepare($quarter2SQL);
+                                $res = $quarter2Query->execute();
+                                if ($res) {
+                                    $quarter2Res = $quarter2Query->fetch(PDO::FETCH_OBJ);
+                                }
+
                         ?>
-                            <tr class="<?php if ($result->Result && $result->Result < 75) echo 'table-danger'; ?>">
-                                <th scope="row"><?php echo $cnt; ?></th>
-                                <td><?php echo $subject->SubjectCode . ' ' . $subject->SubjectName; ?></td>
-                                <td><?php if ($result->Result) echo $result->Result;
-                                    else echo "Not Declared"; ?></td>
-                            </tr>
-                        <?php $cnt += 1;
-                        } ?>
+                                <tr>
+                                    <th scope="row"><?php echo $cnt; ?></th>
+                                    <td><?php echo $subject->SubjectCode . ' ' . $subject->SubjectName; ?></td>
+                                    <td><?php if ($quarter1Res->Result) echo $quarter1Res->Result;
+                                        else echo 'Not Declared';  ?></td>
+                                    <td><?php if ($quarter2Res->Result) echo $quarter2Res->Result;
+                                        else echo 'Not Declared';  ?></td>
+                                    <td><?php if ($result->Result) echo $result->Result;
+                                        else echo "Not Declared"; ?></td>
+                                </tr>
+                        <?php
+                                $cnt += 1;
+                            }
+                        }
+                        ?>
                         <thead>
+                            <tr class="table-secondary">
+                                <th colspan="5">Second Semester</th>
+                            </tr>
+                        </thead>
+                        <?php
+                        $cnt = 1;
+                        foreach ($advisings as $advising) {
+                            if ($advising->Semester == 1) continue;
+                            $subjectSql = "SELECT * FROM tblsubjects WHERE id=:subjectid";
+                            $subjectQuery = $dbh->prepare($subjectSql);
+                            $subjectQuery->bindParam('subjectid', $advising->SubjectId);
+                            $subjectQuery->execute();
+                            $subject = $subjectQuery->fetch(PDO::FETCH_OBJ);
+
+                            $gradesSql = "SELECT * FROM tblgrades WHERE StudentId = :studid AND AdvisingId = :advisingid AND Quarter=5";
+                            $gradesQuery = $dbh->prepare($gradesSql);
+                            $gradesQuery->bindParam(':studid', $student->id);
+                            $gradesQuery->bindParam(':advisingid', $advising->id);
+                            $res = $gradesQuery->execute();
+                            $gradeResults = $gradesQuery->fetchAll(PDO::FETCH_OBJ);
+                            foreach ($gradeResults as $result) {
+
+                                $quarter1SQL = "SELECT * FROM tblgrades WHERE StudentId = $student->id AND AdvisingId = $advising->id AND Quarter = 3";
+                                $quarter1Query = $dbh->prepare($quarter1SQL);
+                                $res = $quarter1Query->execute();
+                                if ($res) {
+                                    $quarter1Res = $quarter1Query->fetch(PDO::FETCH_OBJ);
+                                }
+                                $quarter2SQL = "SELECT * FROM tblgrades WHERE StudentId = $student->id AND AdvisingId = $advising->id AND Quarter = 4";
+                                $quarter2Query = $dbh->prepare($quarter2SQL);
+                                $res = $quarter2Query->execute();
+                                if ($res) {
+                                    $quarter2Res = $quarter2Query->fetch(PDO::FETCH_OBJ);
+                                }
+
+                        ?>
+                                <tr>
+                                    <th scope="row"><?php echo $cnt; ?></th>
+                                    <td><?php echo $subject->SubjectCode . ' ' . $subject->SubjectName; ?></td>
+                                    <td><?php if ($quarter1Res->Result) echo $quarter1Res->Result;
+                                        else echo 'Not Declared';  ?></td>
+                                    <td><?php if ($quarter2Res->Result) echo $quarter2Res->Result;
+                                        else echo 'Not Declared';  ?></td>
+                                    <td><?php if ($result->Result) echo $result->Result;
+                                        else echo "Not Declared"; ?></td>
+                                </tr>
+                        <?php
+                                $cnt += 1;
+                            }
+                        }
+                        ?>
+                        <!-- <thead>
                             <tr class="table-secondary">
                                 <th scope="col">#</th>
                                 <th scope="col">Subject</th>
                                 <th scope="col">Result</th>
                             </tr>
-                        </thead>
+                        </thead> -->
                     </tbody>
                 </table>
 

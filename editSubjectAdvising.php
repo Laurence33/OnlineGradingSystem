@@ -142,7 +142,7 @@ include "header.php";
                 </div>
 
                 <div class="form-group">
-                    <label for="subjectType">Subject Type</label>
+                    <label for="subjectType">Semester</label>
                     <select class="form-control" id="semester" name="semester">
                         <option value="1" <?php if ($result1->Semester == 1) echo "selected"; ?>>1</option>
                         <option value="2" <?php if ($result1->Semester == 2) echo "selected"; ?>>2</option>
