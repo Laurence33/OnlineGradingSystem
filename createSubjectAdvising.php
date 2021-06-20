@@ -11,14 +11,16 @@ if (strlen($_SESSION['alogin']) == '') {
 if (isset($_POST['createSubjectAdvising'])) {
     $classCode = $_POST['classCode'];
     $classId = $_POST['classId'];
+    $semester = $_POST['semester'];
     $subjectId = $_POST['subjectId'];
     $subjectType = $_POST['subjectType'];
     $status = 1;
 
-    $sql = "INSERT INTO  tblsubjectadvising(ClassCode,ClassId,SubjectId,SubjectType,Status) VALUES(:classcode,:classid,:subid,:subtype,:status)";
+    $sql = "INSERT INTO  tblsubjectadvising(ClassCode,ClassId,Semester,SubjectId,SubjectType,Status) VALUES(:classcode,:classid,:semester,:subid,:subtype,:status)";
     $query = $dbh->prepare($sql);
     $query->bindParam(':classcode', $classCode, PDO::PARAM_STR);
     $query->bindParam(':classid', $classId, PDO::PARAM_STR);
+    $query->bindParam(':semester', $semester, PDO::PARAM_STR);
     $query->bindParam(':subid', $subjectId, PDO::PARAM_STR);
     $query->bindParam(':subtype', $subjectType, PDO::PARAM_STR);
     $query->bindParam(':status', $status, PDO::PARAM_STR);
@@ -101,6 +103,14 @@ include "header.php";
                     <?php $cnt += 1;
                         }
                     } ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="subjectId">Semester</label>
+                <select class="form-control" id="semester" name="semester">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
                 </select>
             </div>
 

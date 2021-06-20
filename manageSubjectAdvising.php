@@ -51,6 +51,7 @@ include "header.php";
                     <th scope="col">Class Name</th>
                     <th scope="col">Subject Name</th>
                     <th scope="col">Subject Type</th>
+                    <th scope="col">Semester</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -93,6 +94,7 @@ include "header.php";
                                     echo 'Other Subject';
                                 }
                                 ?></td>
+                            <td><?php echo htmlentities($result->Semester); ?></td>
                             <td><?php if ($result->Status) echo "Active";
                                 else echo "Inactive"; ?></td>
                             <td>
@@ -112,6 +114,7 @@ include "header.php";
                     <th scope="col">Class Name</th>
                     <th scope="col">Subject Name</th>
                     <th scope="col">Subject Type</th>
+                    <th scope="col">Semester</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>

@@ -15,15 +15,17 @@ if (!isset($_GET['advisingid'])) {
 if (isset($_POST['editSubjectAdvising'])) {
     $classCode = $_POST['classCode'];
     $classId = $_POST['classId'];
+    $semester = $_POST['semester'];
     $subjectId = $_POST['subjectId'];
     $subjectType = $_POST['subjectType'];
     $status = $_POST['status'];
     $id = $_POST['id'];
 
-    $sql = "UPDATE tblsubjectAdvising SET ClassCode=:classcode, ClassId=:classid, SubjectId=:subid, SubjectType=:subtype Status=:status WHERE id=:id";
+    $sql = "UPDATE tblsubjectAdvising SET ClassCode=:classcode, ClassId=:classid, Semester=:semester,SubjectId=:subid, SubjectType=:subtype Status=:status WHERE id=:id";
     $query = $dbh->prepare($sql);
     $query->bindParam(':classcode', $classCode, PDO::PARAM_STR);
     $query->bindParam(':classid', $classId, PDO::PARAM_STR);
+    $query->bindParam(':semester', $semester, PDO::PARAM_STR);
     $query->bindParam(':subid', $subjectId, PDO::PARAM_STR);
     $query->bindParam(':subtype', $subjectType, PDO::PARAM_STR);
     $query->bindParam(':status', $status, PDO::PARAM_STR);
@@ -140,10 +142,10 @@ include "header.php";
                 </div>
 
                 <div class="form-group">
-                    <label for="status">Status</label>
-                    <select class="form-control" id="status" name="status">
-                        <option value="1" <?php if ($result1->Status == 1) echo "selected"; ?>>Active</option>
-                        <option value="0" <?php if ($result1->Status == 0) echo "selected"; ?>>Inactive</option>
+                    <label for="subjectType">Subject Type</label>
+                    <select class="form-control" id="semester" name="semester">
+                        <option value="1" <?php if ($result1->Semester == 1) echo "selected"; ?>>1</option>
+                        <option value="2" <?php if ($result1->Semester == 2) echo "selected"; ?>>2</option>
                     </select>
                 </div>
 
@@ -153,6 +155,14 @@ include "header.php";
                         <option value="1">Core Subject</option>
                         <option value="2">Work Immersion/Research/Business Enterprise Simulation(TVL only)/Exhibit/Performance</option>
                         <option value="3">All other subjects</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" name="status">
+                        <option value="1" <?php if ($result1->Status == 1) echo "selected"; ?>>Active</option>
+                        <option value="0" <?php if ($result1->Status == 0) echo "selected"; ?>>Inactive</option>
                     </select>
                 </div>
 
