@@ -5,6 +5,11 @@ $profId = $_SESSION['profId'];
 
 <!-- Sidebar  -->
 <nav id="sidebar">
+    <ul class="list-unstyled CTAs" id="logo" style="padding-bottom:0;">
+        <li>
+            <img class="col-md-12 col-sm-2" src="./assets/img/school-logo.png" alt="Baybayog National High School">
+        </li>
+    </ul>
     <div class="sidebar-header">
         <br>
         <h4>OGS | Professor</h4>
