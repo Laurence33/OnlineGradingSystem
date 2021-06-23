@@ -116,11 +116,11 @@ if (isset($_SESSION['slogin'])) {
                                 <tr>
                                     <th scope="row"><?php echo $cnt; ?></th>
                                     <td><?php echo $subject->SubjectCode . ' ' . $subject->SubjectName; ?></td>
-                                    <td><?php if ($quarter1Res->Result) echo $quarter1Res->Result;
+                                    <td><?php if ($quarter1Res->Result) echo number_format((float)$quarter1Res->Result, 0, '.', '');
                                         else echo 'Not Declared';  ?></td>
-                                    <td><?php if ($quarter2Res->Result) echo $quarter2Res->Result;
+                                    <td><?php if ($quarter2Res->Result) echo number_format((float) $quarter2Res->Result, 0, '.', '');
                                         else echo 'Not Declared';  ?></td>
-                                    <td><?php if ($result->Result) echo $result->Result;
+                                    <td><?php if ($result->Result) echo number_format((float)$result->Result, 1, '.', '');
                                         else echo "Not Declared"; ?></td>
                                 </tr>
                         <?php
@@ -168,11 +168,11 @@ if (isset($_SESSION['slogin'])) {
                                 <tr>
                                     <th scope="row"><?php echo $cnt; ?></th>
                                     <td><?php echo $subject->SubjectCode . ' ' . $subject->SubjectName; ?></td>
-                                    <td><?php if ($quarter1Res->Result) echo $quarter1Res->Result;
+                                    <td><?php if ($quarter1Res->Result) echo number_format((float)$quarter1Res->Result, 0, '.', '');
                                         else echo 'Not Declared';  ?></td>
-                                    <td><?php if ($quarter2Res->Result) echo $quarter2Res->Result;
+                                    <td><?php if ($quarter2Res->Result) echo number_format((float)$quarter2Res->Result, 0, '.', '');
                                         else echo 'Not Declared';  ?></td>
-                                    <td><?php if ($result->Result) echo $result->Result;
+                                    <td><?php if ($result->Result) echo number_format((float)$result->Result, 1, '.', '');
                                         else echo "Not Declared"; ?></td>
                                 </tr>
                         <?php
