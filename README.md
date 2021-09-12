@@ -50,14 +50,14 @@
 
 > **_All sides will have to login to use features_**
 
-### Limitations
+## Limitations
 
 - 🛑 The app is designed for a **single school year only**
 - 🛑 The app **cannot handle huge data**
 - 🛑 The tables are **not paginated**
 - 🛑 The app does **not use table joins on the SQL Queries**, but the Database Design is **Normalized**
 
-### Liscense
+## License
 
 MIT
 Feel free to use it on your learning! 🎉
