@@ -18,11 +18,11 @@
 
 ## Terms
 
-> **Credential** - _Username_ and _Password_ used to access the portal.
-> **Class** - A group where a student belong to (mostly called **section**).
-> **Subject/Course** - A series of lessons or lectures on a particular subject.
-> **Subject Loading** - A subject/course assigned to a class
-> **Subject Advising** - Subject loading assigned to a professor _Ex.: Professor X is teaching Web Development on Class BSCS3A_
+- **Credential** - _Username_ and _Password_ used to access the portal.
+- **Class** - A group where a student belong to (mostly called **section**).
+- **Subject/Course** - A series of lessons or lectures on a particular subject.
+- **Subject Loading** - A subject/course assigned to a class
+- **Subject Advising** - Subject loading assigned to a professor _Ex.: Professor X is teaching Web Development on Class BSCS3A_
 
 ## Features
 
