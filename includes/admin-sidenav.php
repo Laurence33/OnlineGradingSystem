@@ -2,7 +2,7 @@
 <nav id="sidebar">
     <ul class="list-unstyled CTAs" id="logo" style="padding-bottom:0;">
         <li>
-            <img class="col-md-12 col-sm-2" src="./assets/img/school-logo.png" alt="Baybayog National High School">
+            <img class="col-md-12 col-sm-2" src="./assets/img/school-logo.png" height="180px" alt="International School of Asia and the Pacific">
 
         </li>
     </ul>

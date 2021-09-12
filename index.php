@@ -65,7 +65,7 @@ include "header.php";
             <div class="card align-middle" style="height: 70vh; width:50vw">
                 <div class="card-body">
                     <div class="d-flex justify-content-center">
-                        <img class="col-sm-3" src="./assets/img/school-logo.png" alt="Baybayog National High School">
+                        <img class="col-sm-3" src="./assets/img/school-logo.png" height="150px" alt="International School of Asia and The Pacific">
                     </div>
                     <h4 class="text-center">Online Grading System for SHS Department</h4>
                     <br><br>

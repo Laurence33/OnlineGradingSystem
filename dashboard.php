@@ -30,7 +30,7 @@ include "header.php";
                     <i class="fas fa-align-justify"></i>
                     <span>Menu</span>
                 </button>
-                <h4>Baybayog National High School - Senior High School Department</h4>
+                <h1 style="font-size: 1.2rem;">International School of Asia and the Pacific - SHS Department</h1>
                 <h4>&nbsp; Online Grading System</h4>
 
 
