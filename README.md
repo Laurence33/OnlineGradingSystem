@@ -4,14 +4,9 @@
 > handle **_huge amount of data_**. This is purely for my personal development and practice,
 > the featured school does not own the app, it's just because I went to the stated school during my Senior High School.
 
-## Sample User Interface
+## Sample User Interfaces
 
-> Find more on the **/screenshots/** directory
-
-![Login Page](/screenshots/login_page.png)
-![Admin Manage Subject Loading](/screenshots/admin-manage_subject_loading.png)
-![Professor Manage Load](/screenshots/professor-manage_load.png)
-![Student Results Page](/screenshots/student-result_page.png)
+> Check them on the **/screenshots/** directory
 
 ## Technology Used
 
